@@ -1,591 +1,1178 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام متابعة الطلاب</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0d1117;--sf:#161b22;--card:#1c2333;--bd:#30363d;
-  --pri:#58a6ff;--pl:rgba(88,166,255,.12);
-  --gr:#3fb950;--gl:rgba(63,185,80,.12);
-  --or:#d29922;--ol:rgba(210,153,34,.12);
-  --re:#f85149;--rl:rgba(248,81,73,.12);
-  --pu:#bc8cff;--pul:rgba(188,140,255,.12);
-  --cy:#38bdf8;--cyl:rgba(56,189,248,.12);
-  --ye:#fbbf24;--yel:rgba(251,191,36,.12);
-  --tx:#e6edf3;--mu:#8b949e;--mu2:#6e7681;
-  --sh:0 1px 8px rgba(0,0,0,.5);--shm:0 6px 24px rgba(0,0,0,.6);
-  --r:12px;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام متابعة الطلاب</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --sf: #161b22;
+      --card: #1c2333;
+      --bd: #30363d;
+      --pri: #58a6ff;
+      --pl: rgba(88, 166, 255, .12);
+      --gr: #3fb950;
+      --gl: rgba(63, 185, 80, .12);
+      --or: #d29922;
+      --ol: rgba(210, 153, 34, .12);
+      --re: #f85149;
+      --rl: rgba(248, 81, 73, .12);
+      --pu: #bc8cff;
+      --pul: rgba(188, 140, 255, .12);
+      --cy: #38bdf8;
+      --cyl: rgba(56, 189, 248, .12);
+      --ye: #fbbf24;
+      --yel: rgba(251, 191, 36, .12);
+      --tx: #e6edf3;
+      --mu: #8b949e;
+      --mu2: #6e7681;
+      --sh: 0 1px 8px rgba(0, 0, 0, .5);
+      --shm: 0 6px 24px rgba(0, 0, 0, .6);
+      --r: 12px;
+    }
 
-/* LOGIN */
-#LP{min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at 50% 0%,#1a2744 0%,#0d1117 70%);padding:20px;}
-.lcard{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:36px 32px;
-  width:100%;max-width:390px;box-shadow:var(--shm);animation:popUp .4s cubic-bezier(.34,1.56,.64,1);}
-@keyframes popUp{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
-.llogo{text-align:center;margin-bottom:24px;}
-.llogo .li{font-size:48px;display:block;margin-bottom:8px;}
-.llogo h1{font-family:'Cairo',sans-serif;font-size:22px;font-weight:900;
-  background:linear-gradient(90deg,var(--pri),var(--gr));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.llogo p{font-size:12px;color:var(--mu);margin-top:2px;}
-.rrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
-.rc{border:2px solid var(--bd);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:.2s;background:var(--sf);}
-.rc:hover,.rc.on{border-color:var(--pri);background:var(--pl);}
-.rc .ri{font-size:26px;display:block;margin-bottom:4px;}
-.rc .rn{font-size:12px;font-weight:700;color:var(--tx);}
-.fg{margin-bottom:14px;}
-.fg label{display:block;font-size:11px;font-weight:700;color:var(--mu);margin-bottom:5px;letter-spacing:.5px;}
-.fg input,.fg select{width:100%;padding:10px 13px;border:1.5px solid var(--bd);border-radius:9px;
-  font-family:'Tajawal',sans-serif;font-size:14px;color:var(--tx);background:var(--sf);outline:none;transition:.2s;}
-.fg input:focus,.fg select:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(88,166,255,.15);}
-.fg select option{background:var(--sf);}
-.btnL{width:100%;padding:12px;border:none;border-radius:10px;
-  background:linear-gradient(135deg,var(--pri),#1f6feb);color:#fff;
-  font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-top:4px;}
-.btnL:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(88,166,255,.4);}
-.lhint{text-align:center;font-size:11px;color:var(--mu2);margin-top:10px;}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* SHELL */
-#app{display:none;min-height:100vh;flex-direction:column;}
-.hdr{background:var(--sf);border-bottom:1px solid var(--bd);padding:0 20px;height:56px;
-  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:var(--sh);}
-.hbrand{display:flex;align-items:center;gap:8px;cursor:pointer;}
-.hbrand h1{font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;
-  background:linear-gradient(90deg,var(--pri),var(--gr));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.bc{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mu);}
-.bcl{cursor:pointer;color:var(--mu);transition:.2s;}
-.bcl:hover{color:var(--pri);}
-.hright{display:flex;align-items:center;gap:10px;}
-.avbtn{width:32px;height:32px;border-radius:50%;overflow:hidden;cursor:pointer;border:2px solid var(--bd);transition:.2s;background:var(--pl);}
-.avbtn:hover{border-color:var(--pri);}
-.avbtn img{width:100%;height:100%;object-fit:cover;}
-.bsm{background:none;border:1.5px solid var(--bd);border-radius:7px;padding:4px 11px;
-  cursor:pointer;font-family:'Tajawal',sans-serif;font-size:11px;color:var(--mu);transition:.2s;}
-.bsm:hover{border-color:var(--re);color:var(--re);}
-.nw{position:relative;cursor:pointer;}
-.nbg{position:absolute;top:-4px;right:-4px;background:var(--re);color:#fff;font-size:9px;font-weight:700;
-  width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--sf);}
-.np{position:absolute;top:40px;left:0;width:300px;background:var(--card);border-radius:12px;
-  box-shadow:var(--shm);border:1px solid var(--bd);z-index:400;display:none;max-height:340px;overflow-y:auto;}
-.np.open{display:block;animation:fd .2s ease;}
-@keyframes fd{from{transform:translateY(-8px);opacity:0}to{transform:translateY(0);opacity:1}}
-.nph{padding:10px 14px;border-bottom:1px solid var(--bd);font-weight:700;font-size:12px;color:var(--mu);}
-.ni{padding:10px 14px;border-bottom:1px solid var(--bd);display:flex;gap:8px;}
-.ni:last-child{border-bottom:none;}
-.nd{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0;}
-.nd-r{background:var(--re);}.nd-o{background:var(--or);}
-.nt{font-size:11px;line-height:1.5;color:var(--tx);}
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--tx);
+      min-height: 100vh;
+      font-size: 14px;
+    }
 
-/* LAYOUT */
-.abody{display:flex;flex:1;min-height:0;}
-.sb{width:196px;background:var(--sf);border-left:1px solid var(--bd);flex-shrink:0;padding:10px 8px;display:flex;flex-direction:column;gap:2px;}
-.si{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:8px;cursor:pointer;
-  font-size:12px;font-weight:600;color:var(--mu);transition:.2s;border:none;background:none;width:100%;text-align:right;}
-.si:hover{background:var(--card);color:var(--tx);}
-.si.on{background:var(--pl);color:var(--pri);}
-.si .ic{font-size:15px;flex-shrink:0;}
-.sdv{height:1px;background:var(--bd);margin:6px 4px;}
-.main{flex:1;padding:20px;overflow-y:auto;}
+    #LP {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 50% 0%, #1a2744 0%, #0d1117 70%);
+      padding: 20px;
+    }
 
-/* CARDS */
-.card{background:var(--card);border-radius:var(--r);padding:18px;border:1px solid var(--bd);margin-bottom:14px;}
-.ch{font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;margin-bottom:14px;
-  display:flex;align-items:center;gap:7px;color:var(--tx);}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
+    .lcard {
+      background: var(--card);
+      border: 1px solid var(--bd);
+      border-radius: 16px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 390px;
+      box-shadow: var(--shm);
+      animation: popUp .4s cubic-bezier(.34, 1.56, .64, 1);
+    }
 
-/* STAT */
-.stat{background:var(--sf);border-radius:10px;padding:14px;border:1px solid var(--bd);text-align:center;}
-.stat .sv{font-size:26px;font-weight:900;font-family:'Cairo',sans-serif;}
-.stat .sl{font-size:10px;color:var(--mu);font-weight:600;margin-top:2px;}
-.s-b .sv{color:var(--pri);}.s-g .sv{color:var(--gr);}.s-o .sv{color:var(--or);}.s-r .sv{color:var(--re);}
-.s-p .sv{color:var(--pu);}.s-c .sv{color:var(--cy);}
+    @keyframes popUp {
+      from { transform: scale(.88); opacity: 0 }
+      to { transform: scale(1); opacity: 1 }
+    }
 
-/* BADGE */
-.badge{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block;}
-.bAp{background:var(--pul);color:var(--pu);}
-.bA{background:var(--pl);color:var(--pri);}
-.bB{background:var(--cyl);color:var(--cy);}
-.bC{background:var(--gl);color:var(--gr);}
-.bD{background:var(--ol);color:var(--or);}
-.bF{background:var(--rl);color:var(--re);}
+    .llogo { text-align: center; margin-bottom: 24px; }
+    .llogo .li { font-size: 48px; display: block; margin-bottom: 8px; }
+    .llogo h1 {
+      font-family: 'Cairo', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--pri), var(--gr));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .llogo p { font-size: 12px; color: var(--mu); margin-top: 2px; }
 
-/* TABS */
-.tabs{display:flex;gap:4px;border-bottom:2px solid var(--bd);margin-bottom:16px;overflow-x:auto;}
-.tab{padding:8px 16px;border:none;background:none;cursor:pointer;font-family:'Tajawal',sans-serif;
-  font-size:12px;font-weight:700;color:var(--mu);border-bottom:2px solid transparent;
-  margin-bottom:-2px;transition:.2s;white-space:nowrap;}
-.tab:hover{color:var(--tx);}
-.tab.on{color:var(--pri);border-bottom-color:var(--pri);}
+    .rrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+    .rc {
+      border: 2px solid var(--bd);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      text-align: center;
+      transition: .2s;
+      background: var(--sf);
+    }
+    .rc:hover, .rc.on { border-color: var(--pri); background: var(--pl); }
+    .rc .ri { font-size: 26px; display: block; margin-bottom: 4px; }
+    .rc .rn { font-size: 12px; font-weight: 700; color: var(--tx); }
 
-/* BUTTONS */
-.btn{padding:8px 16px;border:none;border-radius:8px;font-family:'Tajawal',sans-serif;
-  font-size:12px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px;}
-.btn:hover{transform:translateY(-1px);}
-.btn-p{background:var(--pri);color:#0d1117;}.btn-p:hover{box-shadow:0 4px 14px rgba(88,166,255,.4);}
-.btn-g{background:var(--gr);color:#0d1117;}.btn-g:hover{box-shadow:0 4px 14px rgba(63,185,80,.4);}
-.btn-gh{background:var(--sf);color:var(--mu);border:1.5px solid var(--bd);}.btn-gh:hover{border-color:var(--pri);color:var(--pri);}
-.btn-r{background:var(--rl);color:var(--re);border:1px solid var(--re);}.btn-r:hover{background:var(--re);color:#fff;}
-.btn-xs{padding:4px 9px;border-radius:6px;border:none;cursor:pointer;font-size:10px;font-weight:700;transition:.2s;}
-.bx-a{background:var(--pl);color:var(--pri);}.bx-a:hover{background:var(--pri);color:#fff;}
-.bx-r{background:var(--rl);color:var(--re);}.bx-r:hover{background:var(--re);color:#fff;}
-.bx-e{background:var(--ol);color:var(--or);}.bx-e:hover{background:var(--or);color:#fff;}
-.bsave{width:100%;padding:11px;border:none;border-radius:10px;
-  background:linear-gradient(135deg,var(--pri),#1f6feb);color:#fff;
-  font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;margin-top:10px;}
-.bsave:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(88,166,255,.35);}
+    .fg { margin-bottom: 14px; }
+    .fg label { display: block; font-size: 11px; font-weight: 700; color: var(--mu); margin-bottom: 5px; letter-spacing: .5px; }
+    .fg input, .fg select {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid var(--bd);
+      border-radius: 9px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 14px;
+      color: var(--tx);
+      background: var(--sf);
+      outline: none;
+      transition: .2s;
+    }
+    .fg input:focus, .fg select:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(88, 166, 255, .15); }
+    .fg select option { background: var(--sf); }
 
-/* TABLE */
-.tbl{width:100%;border-collapse:collapse;}
-.tbl th{text-align:right;padding:8px 11px;font-size:10px;font-weight:700;color:var(--mu);
-  border-bottom:2px solid var(--bd);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
-.tbl td{padding:9px 11px;border-bottom:1px solid var(--bd);font-size:12px;vertical-align:middle;}
-.tbl tr:last-child td{border-bottom:none;}
-.tbl tr:hover td{background:rgba(255,255,255,.02);}
+    .btnL {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--pri), #1f6feb);
+      color: #fff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+      margin-top: 4px;
+    }
+    .btnL:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(88, 166, 255, .4); }
+    .lhint { text-align: center; font-size: 11px; color: var(--mu2); margin-top: 10px; }
 
-/* ALERTS */
-.al{padding:10px 13px;border-radius:9px;font-size:12px;font-weight:600;margin-bottom:8px;
-  display:flex;align-items:flex-start;gap:8px;}
-.al-d{background:var(--rl);color:var(--re);border-right:3px solid var(--re);}
-.al-w{background:var(--ol);color:var(--or);border-right:3px solid var(--or);}
-.al-b{background:var(--pl);color:var(--pri);border-right:3px solid var(--pri);}
-.al-g{background:var(--gl);color:var(--gr);border-right:3px solid var(--gr);}
+    #app { display: none; min-height: 100vh; flex-direction: column; }
 
-/* PROGRESS */
-.pw{background:var(--bd);border-radius:20px;height:7px;overflow:hidden;}
-.pb{height:100%;border-radius:20px;transition:width .8s ease;}
+    .hdr {
+      background: var(--sf);
+      border-bottom: 1px solid var(--bd);
+      padding: 0 20px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 300;
+      box-shadow: var(--sh);
+    }
 
-/* COURSE SELECTOR */
-.csel{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-.csb{padding:7px 15px;border:2px solid var(--bd);border-radius:20px;background:var(--sf);
-  color:var(--mu);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;}
-.csb:hover{border-color:var(--pri);color:var(--pri);}
-.csb.on{border-color:var(--pri);background:var(--pl);color:var(--pri);}
+    .hbrand { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .hbrand h1 {
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--pri), var(--gr));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-/* SCORE INPUTS */
-.sin{width:58px;padding:5px;border:2px solid var(--bd);border-radius:7px;
-  font-family:'Cairo',sans-serif;font-size:15px;font-weight:900;text-align:center;
-  color:var(--pri);outline:none;background:var(--bg);transition:.2s;}
-.sin:focus{border-color:var(--pri);}
-.sin.warn{border-color:var(--re) !important;}
+    .bc { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--mu); }
+    .bcl { cursor: pointer; color: var(--mu); transition: .2s; }
+    .bcl:hover { color: var(--pri); }
 
-/* SECTION CALC BOXES */
-.calcbox{background:var(--sf);border-radius:11px;padding:14px;border:1.5px solid var(--bd);margin-bottom:10px;}
-.calcbox .cb-hdr{font-weight:700;font-size:12px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-.calcbox .cb-result{font-size:22px;font-weight:900;font-family:'Cairo',sans-serif;text-align:center;margin-top:10px;}
+    .hright { display: flex; align-items: center; gap: 10px; }
 
-/* COURSE HERO */
-.chero{background:linear-gradient(135deg,#0e1c36,#0d2016);border-radius:var(--r);
-  padding:22px;margin-bottom:14px;border:1px solid var(--bd);}
-.chero h2{font-family:'Cairo',sans-serif;font-size:20px;font-weight:900;color:var(--tx);}
-.chero p{font-size:12px;color:var(--mu);margin-top:4px;}
-.cmeta{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap;}
-.cmeta span{font-size:11px;color:var(--mu);}
+    .avbtn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid var(--bd);
+      transition: .2s;
+      background: var(--pl);
+    }
+    .avbtn:hover { border-color: var(--pri); }
+    .avbtn img { width: 100%; height: 100%; object-fit: cover; }
 
-/* DIST EDITOR */
-.de-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd);}
-.de-row:last-child{border-bottom:none;}
-.de-lbl{flex:1;font-size:13px;font-weight:600;}
-.de-inp{width:60px;padding:5px 8px;border:1.5px solid var(--bd);border-radius:7px;
-  font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;text-align:center;color:var(--pri);
-  outline:none;background:var(--sf);}
-.de-inp:focus{border-color:var(--pri);}
-.de-bar{flex:2;background:var(--bd);border-radius:20px;height:6px;overflow:hidden;}
-.de-fill{height:100%;border-radius:20px;transition:width .4s;}
+    .bsm {
+      background: none;
+      border: 1.5px solid var(--bd);
+      border-radius: 7px;
+      padding: 4px 11px;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 11px;
+      color: var(--mu);
+      transition: .2s;
+    }
+    .bsm:hover { border-color: var(--re); color: var(--re); }
 
-/* PROFILE */
-.phero{background:linear-gradient(135deg,#0e1c36,#0d2016);border-radius:var(--r);
-  padding:24px;margin-bottom:14px;border:1px solid var(--bd);}
-.avup{width:72px;height:72px;border-radius:50%;overflow:hidden;cursor:pointer;
-  border:3px solid rgba(88,166,255,.3);position:relative;flex-shrink:0;background:var(--pl);}
-.avup img{width:100%;height:100%;object-fit:cover;}
-.avup .ov{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;
-  align-items:center;justify-content:center;opacity:0;transition:.2s;font-size:18px;}
-.avup:hover .ov{opacity:1;}
-.ef{margin-bottom:12px;}
-.ef label{display:block;font-size:11px;font-weight:700;color:var(--mu);margin-bottom:4px;letter-spacing:.5px;}
-.ef input,.ef textarea{width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:8px;
-  font-family:'Tajawal',sans-serif;font-size:13px;color:var(--tx);background:var(--sf);outline:none;transition:.2s;}
-.ef input:focus{border-color:var(--pri);}
+    .nw { position: relative; cursor: pointer; }
+    .nbg {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--re);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--sf);
+    }
+    .np {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: 300px;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shm);
+      border: 1px solid var(--bd);
+      z-index: 400;
+      display: none;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+    .np.open { display: block; animation: fd .2s ease; }
 
+    @keyframes fd {
+      from { transform: translateY(-8px); opacity: 0 }
+      to { transform: translateY(0); opacity: 1 }
+    }
 
-/* STUDENT PROFILE (doctor view) */
-.stud-header{background:linear-gradient(135deg,#0e1c36,#1a0e36);border-radius:var(--r);padding:20px;border:1px solid var(--bd);margin-bottom:14px;}
+    .nph { padding: 10px 14px; border-bottom: 1px solid var(--bd); font-weight: 700; font-size: 12px; color: var(--mu); }
+    .ni { padding: 10px 14px; border-bottom: 1px solid var(--bd); display: flex; gap: 8px; }
+    .ni:last-child { border-bottom: none; }
+    .nd { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .nd-r { background: var(--re); }
+    .nd-o { background: var(--or); }
+    .nt { font-size: 11px; line-height: 1.5; color: var(--tx); }
 
-.lang-row{display:flex;gap:6px;margin-bottom:14px;}
-.lbtn{flex:1;padding:6px;border:1.5px solid var(--bd);border-radius:8px;background:none;color:var(--mu);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;}
-.lbtn.on{border-color:var(--pri);background:var(--pl);color:var(--pri);}
-.s-y .sv{color:var(--ye);}
-.xp-chip{display:flex;align-items:center;gap:4px;background:var(--yel);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:#d29922;border:1px solid var(--ye);}
-.xp-bar{background:var(--bd);border-radius:20px;height:10px;overflow:hidden;margin:8px 0;}
-.xp-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--ye),var(--or));transition:width 1s ease;}
-.badge-card{background:var(--sf);border-radius:11px;padding:14px;border:1.5px solid var(--bd);text-align:center;transition:.2s;cursor:help;}
-.badge-card.earned{border-color:var(--ye);background:var(--yel);}
-.badge-card.locked{opacity:.4;}
-.badge-card .bicon{font-size:30px;display:block;margin-bottom:7px;}
-.badge-card .bname{font-size:11px;font-weight:700;color:var(--tx);}
-.badge-card .bdesc{font-size:9px;color:var(--mu);margin-top:3px;}
-.lb-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:9px;background:var(--sf);border:1px solid var(--bd);margin-bottom:6px;}
-.lb-row.me{border-color:var(--pri);background:var(--pl);}
-.lb-row.top1{border-color:var(--ye);}
-.chal{background:var(--sf);border-radius:11px;padding:13px;border:1.5px solid var(--bd);margin-bottom:8px;}
-.chal.done{border-color:var(--gr);}
-.psug-wrap{display:flex;gap:6px;flex-wrap:wrap;padding:6px 10px;border-top:1px solid var(--bd);}
-.psug{padding:4px 10px;background:var(--pl);color:var(--pri);border:1px solid rgba(88,166,255,.3);border-radius:14px;font-size:10px;cursor:pointer;transition:.2s;font-family:'Tajawal',sans-serif;}
-.psug:hover{background:var(--pri);color:#fff;}
+    .abody { display: flex; flex: 1; min-height: 0; }
 
-.hidden{display:none!important;}
-.flex{display:flex;}.gap8{gap:8px;}.gap12{gap:12px;}.ai-c{align-items:center;}.jb{justify-content:space-between;}
-.mt12{margin-top:12px;}.mb12{margin-bottom:12px;}.mb16{margin-bottom:16px;}
-.tag{display:inline-flex;align-items:center;gap:3px;background:var(--pl);color:var(--pri);
-  padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;margin:2px;}
-@media(max-width:768px){.sb{display:none;}.g2,.g3,.g4{grid-template-columns:1fr;}.main{padding:12px;}#petPanel{width:calc(100vw - 44px);}}
-</style>
+    .sb {
+      width: 196px;
+      background: var(--sf);
+      border-left: 1px solid var(--bd);
+      flex-shrink: 0;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .si {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 11px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--mu);
+      transition: .2s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: right;
+    }
+    .si:hover { background: var(--card); color: var(--tx); }
+    .si.on { background: var(--pl); color: var(--pri); }
+    .si .ic { font-size: 15px; flex-shrink: 0; }
+
+    .sdv { height: 1px; background: var(--bd); margin: 6px 4px; }
+
+    .main { flex: 1; padding: 20px; overflow-y: auto; }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--r);
+      padding: 18px;
+      border: 1px solid var(--bd);
+      margin-bottom: 14px;
+    }
+
+    .ch {
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--tx);
+    }
+
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 11px; }
+
+    .stat {
+      background: var(--sf);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid var(--bd);
+      text-align: center;
+    }
+    .stat .sv { font-size: 26px; font-weight: 900; font-family: 'Cairo', sans-serif; }
+    .stat .sl { font-size: 10px; color: var(--mu); font-weight: 600; margin-top: 2px; }
+    .s-b .sv { color: var(--pri); }
+    .s-g .sv { color: var(--gr); }
+    .s-o .sv { color: var(--or); }
+    .s-r .sv { color: var(--re); }
+    .s-p .sv { color: var(--pu); }
+    .s-c .sv { color: var(--cy); }
+
+    .badge {
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .bAp { background: var(--pul); color: var(--pu); }
+    .bA  { background: var(--pl);  color: var(--pri); }
+    .bB  { background: var(--cyl); color: var(--cy); }
+    .bC  { background: var(--gl);  color: var(--gr); }
+    .bD  { background: var(--ol);  color: var(--or); }
+    .bF  { background: var(--rl);  color: var(--re); }
+
+    .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--bd); margin-bottom: 16px; overflow-x: auto; }
+    .tab {
+      padding: 8px 16px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--mu);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: .2s;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--tx); }
+    .tab.on { color: var(--pri); border-bottom-color: var(--pri); }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-p { background: var(--pri); color: #0d1117; }
+    .btn-p:hover { box-shadow: 0 4px 14px rgba(88, 166, 255, .4); }
+    .btn-g { background: var(--gr); color: #0d1117; }
+    .btn-g:hover { box-shadow: 0 4px 14px rgba(63, 185, 80, .4); }
+    .btn-gh { background: var(--sf); color: var(--mu); border: 1.5px solid var(--bd); }
+    .btn-gh:hover { border-color: var(--pri); color: var(--pri); }
+    .btn-r { background: var(--rl); color: var(--re); border: 1px solid var(--re); }
+    .btn-r:hover { background: var(--re); color: #fff; }
+
+    .btn-xs {
+      padding: 4px 9px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      transition: .2s;
+    }
+    .bx-a { background: var(--pl); color: var(--pri); }
+    .bx-a:hover { background: var(--pri); color: #fff; }
+    .bx-r { background: var(--rl); color: var(--re); }
+    .bx-r:hover { background: var(--re); color: #fff; }
+    .bx-e { background: var(--ol); color: var(--or); }
+    .bx-e:hover { background: var(--or); color: #fff; }
+
+    .bsave {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--pri), #1f6feb);
+      color: #fff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+      margin-top: 10px;
+    }
+    .bsave:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(88, 166, 255, .35); }
+
+    .tbl { width: 100%; border-collapse: collapse; }
+    .tbl th {
+      text-align: right;
+      padding: 8px 11px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--mu);
+      border-bottom: 2px solid var(--bd);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+    .tbl td { padding: 9px 11px; border-bottom: 1px solid var(--bd); font-size: 12px; vertical-align: middle; }
+    .tbl tr:last-child td { border-bottom: none; }
+    .tbl tr:hover td { background: rgba(255, 255, 255, .02); }
+
+    .al {
+      padding: 10px 13px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .al-d { background: var(--rl); color: var(--re); border-right: 3px solid var(--re); }
+    .al-w { background: var(--ol); color: var(--or); border-right: 3px solid var(--or); }
+    .al-b { background: var(--pl); color: var(--pri); border-right: 3px solid var(--pri); }
+    .al-g { background: var(--gl); color: var(--gr); border-right: 3px solid var(--gr); }
+
+    .pw { background: var(--bd); border-radius: 20px; height: 7px; overflow: hidden; }
+    .pb { height: 100%; border-radius: 20px; transition: width .8s ease; }
+
+    .csel { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .csb {
+      padding: 7px 15px;
+      border: 2px solid var(--bd);
+      border-radius: 20px;
+      background: var(--sf);
+      color: var(--mu);
+      font-family: 'Tajawal', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .csb:hover { border-color: var(--pri); color: var(--pri); }
+    .csb.on { border-color: var(--pri); background: var(--pl); color: var(--pri); }
+
+    .sin {
+      width: 58px;
+      padding: 5px;
+      border: 2px solid var(--bd);
+      border-radius: 7px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 900;
+      text-align: center;
+      color: var(--pri);
+      outline: none;
+      background: var(--bg);
+      transition: .2s;
+    }
+    .sin:focus { border-color: var(--pri); }
+    .sin.warn { border-color: var(--re) !important; }
+
+    .calcbox { background: var(--sf); border-radius: 11px; padding: 14px; border: 1.5px solid var(--bd); margin-bottom: 10px; }
+    .calcbox .cb-hdr { font-weight: 700; font-size: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .calcbox .cb-result { font-size: 22px; font-weight: 900; font-family: 'Cairo', sans-serif; text-align: center; margin-top: 10px; }
+
+    .chero {
+      background: linear-gradient(135deg, #0e1c36, #0d2016);
+      border-radius: var(--r);
+      padding: 22px;
+      margin-bottom: 14px;
+      border: 1px solid var(--bd);
+    }
+    .chero h2 { font-family: 'Cairo', sans-serif; font-size: 20px; font-weight: 900; color: var(--tx); }
+    .chero p { font-size: 12px; color: var(--mu); margin-top: 4px; }
+    .cmeta { display: flex; gap: 14px; margin-top: 10px; flex-wrap: wrap; }
+    .cmeta span { font-size: 11px; color: var(--mu); }
+
+    .de-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--bd); }
+    .de-row:last-child { border-bottom: none; }
+    .de-lbl { flex: 1; font-size: 13px; font-weight: 600; }
+    .de-inp {
+      width: 60px;
+      padding: 5px 8px;
+      border: 1.5px solid var(--bd);
+      border-radius: 7px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--pri);
+      outline: none;
+      background: var(--sf);
+    }
+    .de-inp:focus { border-color: var(--pri); }
+    .de-bar { flex: 2; background: var(--bd); border-radius: 20px; height: 6px; overflow: hidden; }
+    .de-fill { height: 100%; border-radius: 20px; transition: width .4s; }
+
+    .phero {
+      background: linear-gradient(135deg, #0e1c36, #0d2016);
+      border-radius: var(--r);
+      padding: 24px;
+      margin-bottom: 14px;
+      border: 1px solid var(--bd);
+    }
+
+    .avup {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      border: 3px solid rgba(88, 166, 255, .3);
+      position: relative;
+      flex-shrink: 0;
+      background: var(--pl);
+    }
+    .avup img { width: 100%; height: 100%; object-fit: cover; }
+    .avup .ov {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: .2s;
+      font-size: 18px;
+    }
+    .avup:hover .ov { opacity: 1; }
+
+    .ef { margin-bottom: 12px; }
+    .ef label { display: block; font-size: 11px; font-weight: 700; color: var(--mu); margin-bottom: 4px; letter-spacing: .5px; }
+    .ef input, .ef textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid var(--bd);
+      border-radius: 8px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 13px;
+      color: var(--tx);
+      background: var(--sf);
+      outline: none;
+      transition: .2s;
+    }
+    .ef input:focus { border-color: var(--pri); }
+
+    .stud-header {
+      background: linear-gradient(135deg, #0e1c36, #1a0e36);
+      border-radius: var(--r);
+      padding: 20px;
+      border: 1px solid var(--bd);
+      margin-bottom: 14px;
+    }
+
+    .lang-row { display: flex; gap: 6px; margin-bottom: 14px; }
+    .lbtn {
+      flex: 1;
+      padding: 6px;
+      border: 1.5px solid var(--bd);
+      border-radius: 8px;
+      background: none;
+      color: var(--mu);
+      font-family: 'Tajawal', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .lbtn.on { border-color: var(--pri); background: var(--pl); color: var(--pri); }
+
+    .s-y .sv { color: var(--ye); }
+
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .gap8 { gap: 8px; }
+    .gap12 { gap: 12px; }
+    .ai-c { align-items: center; }
+    .jb { justify-content: space-between; }
+    .mt12 { margin-top: 12px; }
+    .mb12 { margin-bottom: 12px; }
+    .mb16 { margin-bottom: 16px; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: var(--pl);
+      color: var(--pri);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      margin: 2px;
+    }
+
+    @media(max-width:768px) {
+      .sb { display: none; }
+      .g2, .g3, .g4 { grid-template-columns: 1fr; }
+      .main { padding: 12px; }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- LOGIN -->
-<div id="LP">
-  <div class="lcard">
-    <div class="llogo">
-      <span class="li">🎓</span>
-      <h1>نظام متابعة الطلاب</h1>
-      <p>Academic Monitoring System</p>
-    </div>
-    <div class="lang-row" style="display:none">
-      <button class="lbtn on" onclick="setLang('ar',this)">🇸🇦 العربية</button>
-      <button class="lbtn" onclick="setLang('en',this)">🇺🇸 English</button>
-    </div>
-    <div class="rrow">
-      <div class="rc on" onclick="pickRole('doctor')" id="rDoc"><span class="ri">👨‍🏫</span><div class="rn">دكتور</div></div>
-      <div class="rc" onclick="pickRole('student')" id="rStud"><span class="ri">👨‍🎓</span><div class="rn">طالب</div></div>
-    </div>
-    <div class="fg"><label>اسم المستخدم</label>
-      <input id="lUsr" placeholder="admin" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <div class="fg"><label>كلمة المرور</label>
-      <input type="password" id="lPwd" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <button class="btnL" onclick="doLogin()">دخول ←</button>
-    <p class="lhint">دكتور: admin / 1234 &nbsp;|&nbsp; طالب: 2024001 / 0000</p>
-  </div>
-</div>
-
-<!-- APP -->
-<div id="app">
-  <div class="hdr">
-    <div class="flex ai-c gap12">
-      <div class="hbrand" onclick="goHome()"><span style="font-size:22px">🎓</span><h1 id="A_ttl">نظام متابعة الطلاب</h1></div>
-      <div class="bc" id="BC"></div>
-    </div>
-    <div class="hright">
-      <div class="xp-chip hidden" id="xpChip">⭐ 0 XP</div>
-      <div class="nw" onclick="toggleNotif()" id="NW">
-        <span style="font-size:19px">🔔</span><div class="nbg" id="NB">0</div>
-        <div class="np" id="NP"><div class="nph">الإشعارات</div><div id="NL"></div></div>
+  <!-- LOGIN -->
+  <div id="LP">
+    <div class="lcard">
+      <div class="llogo">
+        <span class="li">🎓</span>
+        <h1>نظام متابعة الطلاب</h1>
+        <p>Academic Monitoring System</p>
       </div>
-      <div class="avbtn" onclick="goTab('profile')">
-        <img id="HAV" src="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%2358a6ff%22/><text x=%2216%22 y=%2221%22 text-anchor=%22middle%22 fill=%22%230d1117%22 font-size=%2214%22 font-weight=%22bold%22>👤</text></svg>'">
+      <div class="rrow">
+        <div class="rc on" onclick="pickRole('doctor')" id="rDoc"><span class="ri">👨‍🏫</span>
+          <div class="rn">دكتور</div>
+        </div>
+        <div class="rc" onclick="pickRole('student')" id="rStud"><span class="ri">👨‍🎓</span>
+          <div class="rn">طالب</div>
+        </div>
       </div>
-      <button class="bsm" onclick="doLogout()">خروج</button>
+      <div class="fg"><label>اسم المستخدم</label>
+        <input id="lUsr" placeholder="admin" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="fg"><label>كلمة المرور</label>
+        <input type="password" id="lPwd" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btnL" onclick="doLogin()">دخول ←</button>
+      <p class="lhint">دكتور: admin / 1234 &nbsp;|&nbsp; طالب: 231100164 / 0000</p>
+      <p class="lhint" style="margin-top:5px;color:#38bdf8">🔵 ممتاز: 999001&nbsp;/&nbsp;0000 &nbsp;|&nbsp; 🟡 متوسط: 999002&nbsp;/&nbsp;0000</p>
     </div>
   </div>
-  <div class="abody">
-    <nav class="sb" id="SB"></nav>
-    <div class="main" id="MN"></div>
+
+  <!-- APP -->
+  <div id="app">
+    <div class="hdr">
+      <div class="flex ai-c gap12">
+        <div class="hbrand" onclick="goHome()"><span style="font-size:22px">🎓</span>
+          <h1 id="A_ttl">نظام متابعة الطلاب</h1>
+        </div>
+        <div class="bc" id="BC"></div>
+      </div>
+      <div class="hright">
+        <div class="nw" onclick="toggleNotif()" id="NW">
+          <span style="font-size:19px">🔔</span>
+          <div class="nbg" id="NB">0</div>
+          <div class="np" id="NP">
+            <div class="nph">الإشعارات</div>
+            <div id="NL"></div>
+          </div>
+        </div>
+        <div class="avbtn" onclick="goTab('profile')">
+          <img id="HAV" src=""
+            onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%2358a6ff%22/><text x=%2216%22 y=%2221%22 text-anchor=%22middle%22 fill=%22%230d1117%22 font-size=%2214%22 font-weight=%22bold%22>👤</text></svg>'">
+        </div>
+        <button class="bsm" onclick="doLogout()">خروج</button>
+      </div>
+    </div>
+    <div class="abody">
+      <nav class="sb" id="SB"></nav>
+      <div class="main" id="MN"></div>
+    </div>
   </div>
-</div>
 
+  <script>
+    // ════════════════════════════
+    // HELPERS
+    // ════════════════════════════
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
-<script>
-// ════════════════════════════
-// DATABASE
-// Schema (Java exact):
-//  - quizzes: array, each from quizMax (default 20), count configurable
-//  - homeworks: array, each from hwMax (default 20), count configurable
-//  - midterm: from midMax (default 20)
-//  - project: from projMax (default 100)
-//  - NO final (removed)
-//  - All weighted, total = 100
-//  - Early warning: any score < 50% of its max
-// ════════════════════════════
-let DB = {
-  users:[
-    {id:'admin',name:'د. أحمد الزهراني',role:'doctor',pwd:'1234',avatar:'',dept:'قسم علوم الحاسب',bio:'أستاذ مشارك',courses:['CS101','MATH201'],comments:{}},
-    {id:'2024001',name:'أحمد محمد',role:'student',pwd:'0000',avatar:'',major:'علوم الحاسب',bio:'',courses:['CS101']},
-    {id:'2024002',name:'سارة علي',role:'student',pwd:'0000',avatar:'',major:'نظم المعلومات',bio:'',courses:['CS101','MATH201']},
-    {id:'2024003',name:'خالد عبدالله',role:'student',pwd:'0000',avatar:'',major:'علوم الحاسب',bio:'',courses:['CS101']},
-    {id:'2024004',name:'نورة سعد',role:'student',pwd:'0000',avatar:'',major:'هندسة البرمجيات',bio:'',courses:['CS101','MATH201']},
-    {id:'2024005',name:'فيصل حسن',role:'student',pwd:'0000',avatar:'',major:'علوم الحاسب',bio:'',courses:['MATH201']},
-  ],
-  courses:[
-    {id:'CS101',name:'مبادئ البرمجة',doctor:'admin',desc:'أساسيات البرمجة بلغة Java',
-     schema:{
-       // Each quiz/HW has its own max — quizMaxes[i] = max for quiz i
-       quizMaxes:[20,10,5],   quizWeight:30,
-       hwMaxes:[20,20,15],    hwWeight:30,
-       midMax:20,             midWeight:20,
-       projMax:100,           projWeight:20
-     },
-     grades:{
-       '2024001':{quizzes:[18,8,4],hws:[18,17,13],mid:17,proj:85},
-       '2024002':{quizzes:[12,7,3],hws:[13,12,10],mid:13,proj:70},
-       '2024003':{quizzes:[8,4,2], hws:[8,9,6],   mid:8, proj:45},
-       '2024004':{quizzes:[20,10,5],hws:[20,19,15],mid:19,proj:95},
-     },
-     comments:{'2024001':'أداء ممتاز، استمر!','2024003':'يحتاج دعم إضافي في المفاهيم الأساسية'}
-    },
-    {id:'MATH201',name:'رياضيات متقدمة',doctor:'admin',desc:'رياضيات وإحصاء',
-     schema:{
-       quizMaxes:[20,10],  quizWeight:20,
-       hwMaxes:[20,15],    hwWeight:20,
-       midMax:20,          midWeight:30,
-       projMax:100,        projWeight:30
-     },
-     grades:{
-       '2024002':{quizzes:[14,8], hws:[13,12],mid:15,proj:75},
-       '2024004':{quizzes:[19,9], hws:[18,14],mid:18,proj:90},
-       '2024005':{quizzes:[10,6], hws:[9,10], mid:11,proj:55},
-     },
-     comments:{}
-    },
-  ]
-};
+    function seededRand(seed) {
+      let s = seed;
+      return function () {
+        s = (s * 1664525 + 1013904223) & 0xffffffff;
+        return (s >>> 0) / 0xffffffff;
+      };
+    }
 
-// ═══ STATE ═══
-let CU=null, lang='ar', loginRole='doctor', activeC=null;
+    const ARABIC_NAMES = [
+      'أحمد محمد', 'سارة علي', 'خالد عبدالله', 'نورة سعد', 'فيصل حسن',
+      'ريم إبراهيم', 'عمر الزهراني', 'لمى الشمري', 'ياسر القحطاني', 'هند المالكي',
+      'محمد العتيبي', 'دانة الغامدي', 'عبدالرحمن الدوسري', 'شيماء الحربي', 'طارق الرشيدي',
+      'أميرة السبيعي', 'سلطان البقمي', 'غادة الفيفي', 'إبراهيم الجهني', 'ميساء الثبيتي',
+      'بندر الزهراني', 'رنا الأحمدي', 'مساعد الشهري', 'وفاء المطيري', 'حمد العنزي',
+      'أروى السلمي', 'فهد الحميد', 'نهى القرني', 'عبدالعزيز السعدي', 'تهاني الخالدي',
+      'راشد البلوي', 'ألاء الهاجري', 'جاسم الحازمي', 'سمر الربيعي',
+    ];
 
-const GRADES=[{g:'A+',min:95,cls:'bAp'},{g:'A',min:90,cls:'bA'},{g:'B',min:80,cls:'bB'},{g:'C',min:70,cls:'bC'},{g:'D',min:60,cls:'bD'},{g:'F',min:0,cls:'bF'}];
-const GC={'A+':'#bc8cff','A':'#58a6ff','B':'#38bdf8','C':'#3fb950','D':'#d29922','F':'#f85149'};
+    const MAJORS = ['علوم الحاسب', 'نظم المعلومات', 'هندسة البرمجيات', 'الأمن السيبراني', 'الذكاء الاصطناعي'];
 
-// ═══ SCORE ENGINE ═══
-function getG(cid,sid){
-  const c=DB.courses.find(c=>c.id===cid);
-  return c?(c.grades[sid]||{quizzes:[],hws:[],mid:null,proj:null}):{quizzes:[],hws:[],mid:null,proj:null};
-}
+    // Real student data from uploaded course sheet
+    // Columns: ID, HW(max 20), CE1(max 5), CE2(max 5), CE3(max 5)
+    // null = absent / not taken (red cell in original sheet)
+    const REAL_CS101_DATA = [
+      // ── Top scorers get full mid+proj → A+ ──────────────────────────────
+      { id: '231100164', name: 'أحمد محمد',          hw: 7,  ce: [4, 1, 1]                       },
+      { id: '241200239', name: 'سارة علي',           hw: 19, ce: [5, 4, 5], mid: 20, proj: 100   },
+      { id: '241200267', name: 'خالد عبدالله',        hw: 17, ce: [4, 4, 3]                       },
+      { id: '241200162', name: 'نورة سعد',           hw: 10, ce: [5, 4, 5]                       },
+      { id: '231100285', name: 'فيصل حسن',           hw: 2,  ce: [5, 0, null]                    },
+      { id: '241100534', name: 'ريم إبراهيم',         hw: 9,  ce: [5, 2, 4]                       },
+      { id: '241100753', name: 'عمر الزهراني',        hw: 8,  ce: [4, 2, 5]                       },
+      { id: '231100170', name: 'لمى الشمري',          hw: 1,  ce: [null, 0, 0]                    },
+      { id: '231100147', name: 'ياسر القحطاني',       hw: 13, ce: [5, 4, 5], mid: 19, proj: 98   },
+      { id: '241100584', name: 'هند المالكي',         hw: 3,  ce: [0, 2, 1]                       },
+      { id: '231100459', name: 'محمد العتيبي',        hw: 11, ce: [1, 3, 5]                       },
+      { id: '241100320', name: 'دانة الغامدي',        hw: 10, ce: [3, 3, 3]                       },
+      { id: '211100170', name: 'عبدالرحمن الدوسري',   hw: 0,  ce: [null, null, null]              },
+      { id: '221100378', name: 'شيماء الحربي',        hw: 12, ce: [4, 3, 2]                       },
+      { id: '231100259', name: 'طارق الرشيدي',        hw: 8,  ce: [2, 1, 3]                       },
+      { id: '221100230', name: 'أميرة السبيعي',       hw: 4,  ce: [1, 2, 4]                       },
+      { id: '231100149', name: 'سلطان البقمي',        hw: 14, ce: [0, 2, 1]                       },
+      { id: '241200727', name: 'غادة الفيفي',         hw: 3,  ce: [2, null, 0]                    },
+      { id: '241100492', name: 'إبراهيم الجهني',      hw: 3,  ce: [3, 5, 3]                       },
+      { id: '222100632', name: 'ميساء الثبيتي',       hw: 3,  ce: [5, 0, null]                    },
+      { id: '241100350', name: 'بندر الزهراني',       hw: 19, ce: [4, 5, 5], mid: 20, proj: 100  },
+      { id: '241100290', name: 'رنا الأحمدي',        hw: 11, ce: [5, 3, null]                    },
+      { id: '231100223', name: 'مساعد الشهري',        hw: 13, ce: [2, 5, 5]                       },
+      { id: '241100268', name: 'وفاء المطيري',        hw: 0,  ce: [null, null, null]              },
+      { id: '211100090', name: 'حمد العنزي',          hw: 6,  ce: [3, 1, 3]                       },
+      { id: '231100608', name: 'أروى السلمي',         hw: 9,  ce: [2, 2, 4]                       },
+      { id: '231100407', name: 'فهد الحميد',          hw: 2,  ce: [1, null, 0]                    },
+      { id: '241200280', name: 'نهى القرني',          hw: 11, ce: [2, 3, 4]                       },
+      { id: '231100261', name: 'عبدالعزيز السعدي',    hw: 10, ce: [2, 4, 4]                       },
+      { id: '241100859', name: 'تهاني الخالدي',       hw: 12, ce: [3, 2, 3]                       },
 
-// Helper: get quiz/hw count and maxes from schema
-function qMaxes(sc){return sc.quizMaxes||Array(sc.quizCount||0).fill(sc.quizMax||20);}
-function hMaxes(sc){return sc.hwMaxes||Array(sc.hwCount||0).fill(sc.hwMax||20);}
+      // ── 4 HIGH-RANKING ADDITIONS (doctor view) — all A+ ─────────────────
+      { id: '241900001', name: 'عبدالله الراشد',      hw: 20, ce: [5, 5, 5], mid: 20, proj: 100  },
+      { id: '241900002', name: 'نواف الحسن',           hw: 19, ce: [5, 5, 4], mid: 20, proj: 95   },
+      { id: '241900003', name: 'منيرة السالم',         hw: 20, ce: [5, 4, 5], mid: 19, proj: 97   },
+      { id: '241900004', name: 'يوسف العمر',           hw: 18, ce: [5, 5, 5], mid: 20, proj: 100  },
 
-function calcSection(cid,sid,section){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return 0;
-  const g=getG(cid,sid);const sc=c.schema;
-  if(section==='quiz'){
-    const maxes=qMaxes(sc);
-    const valid=g.quizzes.map((v,i)=>v!=null?{v,max:maxes[i]||20}:null).filter(Boolean);
-    if(!valid.length)return 0;
-    // Each quiz contributes equally to the total quiz weight
-    const contrib=valid.reduce((a,{v,max})=>a+(v/max),0)/maxes.length;
-    return Math.round(contrib*sc.quizWeight*10)/10;
-  }
-  if(section==='hw'){
-    const maxes=hMaxes(sc);
-    const valid=g.hws.map((v,i)=>v!=null?{v,max:maxes[i]||20}:null).filter(Boolean);
-    if(!valid.length)return 0;
-    const contrib=valid.reduce((a,{v,max})=>a+(v/max),0)/maxes.length;
-    return Math.round(contrib*sc.hwWeight*10)/10;
-  }
-  if(section==='mid'){
-    if(g.mid==null)return 0;
-    return Math.round((g.mid/sc.midMax)*sc.midWeight*10)/10;
-  }
-  if(section==='proj'){
-    if(g.proj==null)return 0;
-    return Math.round((g.proj/sc.projMax)*sc.projWeight*10)/10;
-  }
-  return 0;
-}
+      // ── TEST ACCOUNTS ───────────────────────────────────────────────────
+      // High rank test → A+  →  login: 999001 / 0000
+      { id: '999001', name: 'طالب (ممتاز - للتجربة)',  hw: 20, ce: [5, 5, 5], mid: 20, proj: 100 },
+      // Mid rank test  → B   →  login: 999002 / 0000
+      { id: '999002', name: 'طالب (متوسط - للتجربة)',  hw: 17, ce: [4, 4, 4], mid: 17, proj: 80  },
+    ];
 
-function calcTotal(cid,sid){
-  return Math.round((calcSection(cid,sid,'quiz')+calcSection(cid,sid,'hw')+calcSection(cid,sid,'mid')+calcSection(cid,sid,'proj'))*10)/10;
-}
+    function buildUsers() {
+      const users = [
+        {
+          id: 'admin', name: 'د. محمد الشربيني', role: 'doctor', pwd: '1234',
+          avatar: '', dept: 'قسم علوم الحاسب', bio: 'أستاذ مشارك',
+          courses: ['CS101', 'MATH201'], comments: {}
+        }
+      ];
 
-function getGr(score){return GRADES.find(g=>score>=g.min)||GRADES[GRADES.length-1];}
+      // Real CS101 students from uploaded sheet
+      REAL_CS101_DATA.forEach((s, i) => {
+        users.push({
+          id: s.id, name: s.name, role: 'student', pwd: '0000',
+          avatar: '', major: MAJORS[i % MAJORS.length], bio: '',
+          courses: ['CS101']
+        });
+      });
 
-function getWarnings(cid,sid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return[];
-  const g=getG(cid,sid);const sc=c.schema;const w=[];
-  const qm=qMaxes(sc),hm=hMaxes(sc);
-  g.quizzes.forEach((v,i)=>{if(v!=null&&v<(qm[i]||20)*0.5)w.push(`Quiz ${i+1}: ${v}/${qm[i]||20}`);});
-  g.hws.forEach((v,i)=>{if(v!=null&&v<(hm[i]||20)*0.5)w.push(`HW ${i+1}: ${v}/${hm[i]||20}`);});
-  if(g.mid!=null&&g.mid<sc.midMax*0.5)w.push(`Mid: ${g.mid}/${sc.midMax}`);
-  return w;
-}
+      // Generated MATH201-only students
+      for (let i = 0; i < 34; i++) {
+        const id = '2024' + String(i + 1).padStart(3, '0');
+        const name = ARABIC_NAMES[i] || `طالب ${i + 1}`;
+        users.push({
+          id, name, role: 'student', pwd: '0000',
+          avatar: '', major: MAJORS[i % MAJORS.length], bio: '',
+          courses: ['MATH201']
+        });
+      }
+      return users;
+    }
 
-function normalStats(scores){
-  if(!scores.length)return{mean:0,std:0,above:0,at:0,below:0,shape:'—'};
-  const mean=scores.reduce((a,b)=>a+b,0)/scores.length;
-  const std=Math.sqrt(scores.reduce((a,b)=>a+Math.pow(b-mean,2),0)/scores.length);
-  let above=0,at=0,below=0;
-  scores.forEach(s=>{if(s>mean+5)above++;else if(s<mean-5)below++;else at++;});
-  const shape=above>below&&above>at?'Skewed Left — الفصل ممتاز 🎉':below>above&&below>at?'Skewed Right — مستوى منخفض ⚠️':'Bell Curve — توزيع طبيعي ✅';
-  return{mean:Math.round(mean*10)/10,std:Math.round(std*10)/10,above,at,below,shape};
-}
+    function buildCS101Grades() {
+      const grades = {};
+      REAL_CS101_DATA.forEach(s => {
+        grades[s.id] = {
+          quizzes: [...s.ce],
+          hws:     [s.hw],
+          mid:     s.mid  ?? null,
+          proj:    s.proj ?? null
+        };
+      });
+      return grades;
+    }
 
-function riskAnalysis(cid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return null;
-  const studs=courseStudents(cid);if(!studs.length)return null;
-  let atRisk=0;
-  const details=studs.map(s=>{
-    const w=getWarnings(cid,s.id);const flagged=w.length>0;
-    if(flagged)atRisk++;
-    const tot=calcTotal(cid,s.id);const gr=getGr(tot);
-    return{name:s.name,id:s.id,flagged,w,tot,gr};
-  });
-  const pF=Math.round(atRisk/studs.length*100)/100;
-  return{details,atRisk,pF,critical:pF>0.4,n:studs.length};
-}
+    function genQuizScores(maxes, seed) {
+      const rand = seededRand(seed);
+      const tier = rand() < 0.15 ? 0 : rand() < 0.30 ? 1 : rand() < 0.60 ? 2 : 3;
+      return maxes.map(mx => {
+        let base;
+        if (tier === 0) base = rand() * 0.45;
+        else if (tier === 1) base = 0.45 + rand() * 0.25;
+        else if (tier === 2) base = 0.65 + rand() * 0.25;
+        else base = 0.82 + rand() * 0.18;
+        return Math.round(clamp(base * mx, 0, mx));
+      });
+    }
+    function genHwScores(maxes, seed) {
+      const rand = seededRand(seed + 99999);
+      const tier = rand() < 0.12 ? 0 : rand() < 0.28 ? 1 : rand() < 0.60 ? 2 : 3;
+      return maxes.map(mx => {
+        let base;
+        if (tier === 0) base = rand() * 0.45;
+        else if (tier === 1) base = 0.45 + rand() * 0.25;
+        else if (tier === 2) base = 0.65 + rand() * 0.25;
+        else base = 0.82 + rand() * 0.18;
+        return Math.round(clamp(base * mx, 0, mx));
+      });
+    }
+    function genMid(max, seed) {
+      const rand = seededRand(seed + 77777);
+      const tier = rand() < 0.12 ? 0 : rand() < 0.28 ? 1 : rand() < 0.60 ? 2 : 3;
+      let base;
+      if (tier === 0) base = rand() * 0.45;
+      else if (tier === 1) base = 0.45 + rand() * 0.25;
+      else if (tier === 2) base = 0.65 + rand() * 0.25;
+      else base = 0.82 + rand() * 0.18;
+      return Math.round(clamp(base * max, 0, max));
+    }
+    function genProj(max, seed) {
+      const rand = seededRand(seed + 55555);
+      const tier = rand() < 0.10 ? 0 : rand() < 0.25 ? 1 : rand() < 0.60 ? 2 : 3;
+      let base;
+      if (tier === 0) base = rand() * 0.45;
+      else if (tier === 1) base = 0.45 + rand() * 0.25;
+      else if (tier === 2) base = 0.65 + rand() * 0.25;
+      else base = 0.82 + rand() * 0.18;
+      return Math.round(clamp(base * max, 0, max));
+    }
 
-// ═══ HELPERS ═══
-function courseStudents(cid){return DB.users.filter(u=>u.role==='student'&&u.courses.includes(cid));}
-function myCourses(){return CU.role==='doctor'?DB.courses.filter(c=>c.doctor===CU.id):DB.courses.filter(c=>CU.courses.includes(c.id));}
-function aC(){return DB.courses.find(c=>c.id===activeC)||myCourses()[0];}
+    function buildMATH201Grades(users) {
+      const sc = { quizMaxes: [20, 10], quizWeight: 20, hwMaxes: [20, 15], hwWeight: 20, midMax: 20, midWeight: 30, projMax: 100, projWeight: 30 };
+      const grades = {};
+      users.filter(u => u.role === 'student' && u.courses.includes('MATH201')).forEach(s => {
+        const seed = parseInt(s.id) * 23 + 7;
+        grades[s.id] = {
+          quizzes: genQuizScores(sc.quizMaxes, seed),
+          hws: genHwScores(sc.hwMaxes, seed),
+          mid: genMid(sc.midMax, seed),
+          proj: genProj(sc.projMax, seed)
+        };
+      });
+      return grades;
+    }
 
-function setBc(items){
-  document.getElementById('BC').innerHTML=items.filter(Boolean).map((it,i)=>
-    `${i?'<span style="color:var(--bd)">›</span>':''}<span class="bcl" onclick="${it.fn||''}">${it.label}</span>`
-  ).join('');
-}
+    const _users = buildUsers();
 
-function totalWeight(sc){return sc.quizWeight+sc.hwWeight+sc.midWeight+sc.projWeight;}
+    let DB = {
+      users: _users,
+      courses: [
+        {
+          id: 'CS101',
+          name: 'مبادئ البرمجة',
+          doctor: 'admin',
+          desc: 'أساسيات البرمجة بلغة Java',
+          // Schema updated to match uploaded sheet:
+          // 3 CE quizzes each out of 5, 1 HW out of 20
+          schema: {
+            quizMaxes: [5, 5, 5],
+            quizWeight: 30,
+            hwMaxes: [20],
+            hwWeight: 30,
+            midMax: 20,
+            midWeight: 20,
+            projMax: 100,
+            projWeight: 20
+          },
+          grades: buildCS101Grades(),
+          comments: {}
+        },
+        {
+          id: 'MATH201',
+          name: 'رياضيات متقدمة',
+          doctor: 'admin',
+          desc: 'رياضيات وإحصاء',
+          schema: {
+            quizMaxes: [20, 10],
+            quizWeight: 20,
+            hwMaxes: [20, 15],
+            hwWeight: 20,
+            midMax: 20,
+            midWeight: 30,
+            projMax: 100,
+            projWeight: 30
+          },
+          grades: buildMATH201Grades(_users),
+          comments: {}
+        },
+      ]
+    };
 
-// ═══ BELL CURVE ═══
-function drawBell(cid){
-  const canvas=document.getElementById('BC_'+cid);if(!canvas)return;
-  const scores=courseStudents(cid).map(s=>calcTotal(cid,s.id));
-  const W=canvas.offsetWidth||500;canvas.width=W;canvas.height=150;
-  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,150);
-  if(scores.length<2){ctx.fillStyle='#8b949e';ctx.font='12px Tajawal';ctx.textAlign='center';ctx.fillText('أضف طلاباً لرسم التوزيع',W/2,75);return;}
-  const st=normalStats(scores);if(!st.std)return;
-  const gauss=x=>Math.exp(-.5*Math.pow((x-st.mean)/st.std,2));
-  const pts=Array.from({length:300},(_,i)=>{const x=i/299*100;return{x,y:gauss(x)};});
-  const my=Math.max(...pts.map(p=>p.y));
-  const tx=x=>(x/100)*W,ty=y=>143-(y/my)*132;
-  [[0,60,'rgba(248,81,73,.1)'],[60,70,'rgba(210,153,34,.1)'],[70,80,'rgba(56,189,248,.1)'],[80,90,'rgba(63,185,80,.1)'],[90,100,'rgba(188,140,255,.12)']].forEach(([f,t,c])=>{
-    const zp=pts.filter(p=>p.x>=f&&p.x<=t);if(!zp.length)return;
-    ctx.beginPath();ctx.moveTo(tx(zp[0].x),ty(zp[0].y));
-    zp.forEach(p=>ctx.lineTo(tx(p.x),ty(p.y)));
-    ctx.lineTo(tx(zp[zp.length-1].x),143);ctx.lineTo(tx(zp[0].x),143);
-    ctx.closePath();ctx.fillStyle=c;ctx.fill();
-  });
-  [60,70,80,90].forEach((th,i)=>{
-    ctx.beginPath();ctx.moveTo(tx(th),2);ctx.lineTo(tx(th),143);
-    ctx.strokeStyle=['#f85149','#d29922','#38bdf8','#bc8cff'][i];
-    ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();ctx.setLineDash([]);
-  });
-  const gr=ctx.createLinearGradient(0,0,W,0);
-  gr.addColorStop(0,'rgba(248,81,73,.9)');gr.addColorStop(.4,'rgba(210,153,34,.9)');
-  gr.addColorStop(.75,'rgba(63,185,80,.9)');gr.addColorStop(1,'rgba(188,140,255,.9)');
-  ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(tx(p.x),ty(p.y)):ctx.moveTo(tx(p.x),ty(p.y)));
-  ctx.strokeStyle=gr;ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.stroke();
-  scores.forEach(sc=>{
-    ctx.beginPath();ctx.arc(tx(sc),ty(gauss(sc))-6,4,0,Math.PI*2);
-    ctx.fillStyle=GC[getGr(sc).g];ctx.fill();ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=1.5;ctx.stroke();
-  });
-  ctx.beginPath();ctx.moveTo(tx(st.mean),2);ctx.lineTo(tx(st.mean),143);
-  ctx.strokeStyle='rgba(88,166,255,.4)';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);
-}
+    // ═══ STATE ═══
+    let CU = null, lang = 'ar', loginRole = 'doctor', activeC = null;
 
-// ═══ LOGIN ═══
-function pickRole(r){
-  loginRole=r;
-  document.getElementById('rDoc').classList.toggle('on',r==='doctor');
-  document.getElementById('rStud').classList.toggle('on',r==='student');
-}
-function doLogin(){
-  const usr=document.getElementById('lUsr').value.trim();
-  const pwd=document.getElementById('lPwd').value;
-  const u=DB.users.find(u=>u.id===usr&&u.pwd===pwd&&u.role===loginRole);
-  if(!u){alert('بيانات غير صحيحة');return;}
-  CU=u;activeC=myCourses()[0]?.id||null;showApp();
-}
-function doLogout(){
-  CU=null;activeC=null;
-  document.getElementById('app').style.display='none';
-  document.getElementById('LP').style.display='flex';
-  document.getElementById('lPwd').value='';
-}
-function showApp(){
-  document.getElementById('LP').style.display='none';
-  document.getElementById('app').style.display='flex';
-  document.getElementById('HAV').src=CU.avatar||'';
-  buildSB();buildNotifs();goHome();
-}
-function goHome(){goTab('dash');}
+    const GRADES = [
+      { g: 'A+', min: 95, cls: 'bAp' },
+      { g: 'A',  min: 90, cls: 'bA'  },
+      { g: 'B',  min: 80, cls: 'bB'  },
+      { g: 'C',  min: 70, cls: 'bC'  },
+      { g: 'D',  min: 60, cls: 'bD'  },
+      { g: 'F',  min: 0,  cls: 'bF'  }
+    ];
+    const GC = { 'A+': '#bc8cff', 'A': '#58a6ff', 'B': '#38bdf8', 'C': '#3fb950', 'D': '#d29922', 'F': '#f85149' };
 
-// ═══ SHELL ═══
-function buildSB(){
-  const isDoc=CU.role==='doctor';
-  const items=isDoc?[
-    {id:'dash',ic:'📊',lb:'لوحة التحكم'},
-    {id:'grades',ic:'✏️',lb:'إدخال الدرجات'},
-    {id:'students',ic:'👥',lb:'الطلاب'},
-    {id:'schema',ic:'⚖️',lb:'توزيع الدرجات'},
-    'div',
-    {id:'alerts',ic:'🚨',lb:'التنبيهات'},
-    {id:'report',ic:'📋',lb:'التقرير'},
-    'div',
-    {id:'profile',ic:'👤',lb:'ملفي الشخصي'},
-  ]:[
-    {id:'dash',ic:'🏠',lb:'الرئيسية'},
-    {id:'grades',ic:'📊',lb:'درجاتي'},
-    'div',
-    {id:'profile',ic:'👤',lb:'ملفي الشخصي'},
-  ];
-  document.getElementById('SB').innerHTML=items.map(it=>{
-    if(it==='div')return'<div class="sdv"></div>';
-    return`<button class="si" id="sb-${it.id}" onclick="goTab('${it.id}')"><span class="ic">${it.ic}</span>${it.lb}</button>`;
-  }).join('');
-}
+    // ═══ SCORE ENGINE ═══
+    function getG(cid, sid) {
+      const c = DB.courses.find(c => c.id === cid);
+      return c ? (c.grades[sid] || { quizzes: [], hws: [], mid: null, proj: null }) : { quizzes: [], hws: [], mid: null, proj: null };
+    }
 
-function markTab(id){
-  document.querySelectorAll('.si').forEach(b=>b.classList.remove('on'));
-  const el=document.getElementById('sb-'+id);if(el)el.classList.add('on');
-}
+    function qMaxes(sc) { return sc.quizMaxes || Array(sc.quizCount || 0).fill(sc.quizMax || 20); }
+    function hMaxes(sc) { return sc.hwMaxes || Array(sc.hwCount || 0).fill(sc.hwMax || 20); }
 
-function goTab(tab){
-  markTab(tab);
-  const mn=document.getElementById('MN');
-  if(CU.role==='doctor'){
-    if(tab==='dash'){setBc([{lb:'لوحة التحكم'}]);mn.innerHTML=buildDocDash();setTimeout(()=>myCourses().forEach(c=>drawBell(c.id)),60);}
-    else if(tab==='grades'){setBc([{lb:'إدخال الدرجات'}]);mn.innerHTML=buildGradeEntry();}
-    else if(tab==='students'){setBc([{lb:'الطلاب'}]);mn.innerHTML=buildDocStudents();}
-    else if(tab==='schema'){setBc([{lb:'توزيع الدرجات'}]);mn.innerHTML=buildSchema();}
-    else if(tab==='alerts'){setBc([{lb:'التنبيهات'}]);mn.innerHTML=buildAlerts();}
-    else if(tab==='report'){setBc([{lb:'التقرير'}]);mn.innerHTML=buildReport();setTimeout(()=>myCourses().forEach(c=>drawBell(c.id)),60);}
-    else if(tab==='profile'){setBc([{lb:'ملفي الشخصي'}]);mn.innerHTML=buildProfile();}
-  } else {
-    if(tab==='dash'){setBc([{lb:'الرئيسية'}]);mn.innerHTML=buildStudDash();}
-    else if(tab==='grades'){setBc([{lb:'درجاتي'}]);mn.innerHTML=buildStudGradesPage();}
-    else if(tab==='profile'){setBc([{lb:'ملفي الشخصي'}]);mn.innerHTML=buildProfile();}
-  }
-}
+    function calcSection(cid, sid, section) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return 0;
+      const g = getG(cid, sid); const sc = c.schema;
+      if (section === 'quiz') {
+        const maxes = qMaxes(sc);
+        const valid = g.quizzes.map((v, i) => v != null ? { v, max: maxes[i] || 5 } : null).filter(Boolean);
+        if (!valid.length) return 0;
+        const contrib = valid.reduce((a, { v, max }) => a + (v / max), 0) / maxes.length;
+        return Math.round(contrib * sc.quizWeight * 10) / 10;
+      }
+      if (section === 'hw') {
+        const maxes = hMaxes(sc);
+        const valid = g.hws.map((v, i) => v != null ? { v, max: maxes[i] || 20 } : null).filter(Boolean);
+        if (!valid.length) return 0;
+        const contrib = valid.reduce((a, { v, max }) => a + (v / max), 0) / maxes.length;
+        return Math.round(contrib * sc.hwWeight * 10) / 10;
+      }
+      if (section === 'mid') {
+        if (g.mid == null) return 0;
+        return Math.round((g.mid / sc.midMax) * sc.midWeight * 10) / 10;
+      }
+      if (section === 'proj') {
+        if (g.proj == null) return 0;
+        return Math.round((g.proj / sc.projMax) * sc.projWeight * 10) / 10;
+      }
+      return 0;
+    }
 
-// ═══ COURSE SELECTOR ═══
-function cSel(selFn){
-  return`<div class="csel">${myCourses().map(c=>`<button class="csb ${c.id===activeC?'on':''}" onclick="${selFn}('${c.id}')">${c.name}</button>`).join('')}</div>`;
-}
+    function calcTotal(cid, sid) {
+      return Math.round((
+        calcSection(cid, sid, 'quiz') +
+        calcSection(cid, sid, 'hw') +
+        calcSection(cid, sid, 'mid') +
+        calcSection(cid, sid, 'proj')
+      ) * 10) / 10;
+    }
 
-// ═══ DOCTOR: DASHBOARD ═══
-function buildDocDash(){
-  const courses=myCourses();
-  if(!courses.length)return`<div class="card" style="text-align:center;padding:40px;color:var(--mu)">لا توجد مقررات</div>`;
-  const c=aC();
-  const studs=courseStudents(c.id);
-  const scores=studs.map(s=>calcTotal(c.id,s.id));
-  const st=normalStats(scores);
-  const excellent=scores.filter(s=>s>=90).length;
-  const atrisk=scores.filter(s=>s<60).length;
-  const passRate=scores.length?Math.round((scores.length-atrisk)/scores.length*100):0;
-  const risk=riskAnalysis(c.id);
-  const alerts=getSmartAlerts();
+    // ═══ MAX POSSIBLE SCORE (assuming perfect on all null/ungraded entries) ═══
+    function calcMaxPossible(cid, sid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return 100;
+      const g = getG(cid, sid); const sc = c.schema;
+      const qm = qMaxes(sc); const hm = hMaxes(sc);
 
-  return`
+      // Quiz: treat null as 1.0 (perfect ratio)
+      const qPoss = qm.reduce((a, mx, i) => {
+        const v = g.quizzes?.[i];
+        return a + (v != null ? v / mx : 1);
+      }, 0) / qm.length * sc.quizWeight;
+
+      // HW: treat null as 1.0
+      const hPoss = hm.reduce((a, mx, i) => {
+        const v = g.hws?.[i];
+        return a + (v != null ? v / mx : 1);
+      }, 0) / hm.length * sc.hwWeight;
+
+      // Mid: if null assume full weight
+      const mPoss = g.mid != null ? (g.mid / sc.midMax) * sc.midWeight : sc.midWeight;
+
+      // Proj: if null assume full weight
+      const pPoss = g.proj != null ? (g.proj / sc.projMax) * sc.projWeight : sc.projWeight;
+
+      return Math.round((qPoss + hPoss + mPoss + pPoss) * 10) / 10;
+    }
+
+    function getGr(score) { return GRADES.find(g => score >= g.min) || GRADES[GRADES.length - 1]; }
+
+    function getWarnings(cid, sid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return [];
+      const g = getG(cid, sid); const sc = c.schema; const w = [];
+      const qm = qMaxes(sc), hm = hMaxes(sc);
+      g.quizzes.forEach((v, i) => { if (v != null && v < (qm[i] || 5) * 0.5) w.push(`CE${i + 1}: ${v}/${qm[i] || 5}`); });
+      g.hws.forEach((v, i) => { if (v != null && v < (hm[i] || 20) * 0.5) w.push(`HW${i + 1}: ${v}/${hm[i] || 20}`); });
+      if (g.mid != null && g.mid < sc.midMax * 0.5) w.push(`Mid: ${g.mid}/${sc.midMax}`);
+      return w;
+    }
+
+    function normalStats(scores) {
+      if (!scores.length) return { mean: 0, std: 0, above: 0, at: 0, below: 0, shape: '—' };
+      const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+      const std = Math.sqrt(scores.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / scores.length);
+      let above = 0, at = 0, below = 0;
+      scores.forEach(s => { if (s > mean + 5) above++; else if (s < mean - 5) below++; else at++; });
+      const shape = above > below && above > at ? 'Skewed Left — الفصل ممتاز 🎉'
+        : below > above && below > at ? 'Skewed Right — مستوى منخفض ⚠️'
+        : 'Bell Curve — توزيع طبيعي ✅';
+      return { mean: Math.round(mean * 10) / 10, std: Math.round(std * 10) / 10, above, at, below, shape };
+    }
+
+    function riskAnalysis(cid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return null;
+      const studs = courseStudents(cid); if (!studs.length) return null;
+      let atRisk = 0;
+      const details = studs.map(s => {
+        const w = getWarnings(cid, s.id); const flagged = w.length > 0;
+        if (flagged) atRisk++;
+        const tot = calcTotal(cid, s.id); const gr = getGr(tot);
+        return { name: s.name, id: s.id, flagged, w, tot, gr };
+      });
+      const pF = Math.round(atRisk / studs.length * 100) / 100;
+      return { details, atRisk, pF, critical: pF > 0.4, n: studs.length };
+    }
+
+    // ═══ HELPERS ═══
+    function courseStudents(cid) { return DB.users.filter(u => u.role === 'student' && u.courses.includes(cid)); }
+    function myCourses() {
+      return CU.role === 'doctor'
+        ? DB.courses.filter(c => c.doctor === CU.id)
+        : DB.courses.filter(c => CU.courses.includes(c.id));
+    }
+    function aC() { return DB.courses.find(c => c.id === activeC) || myCourses()[0]; }
+
+    function setBc(items) {
+      document.getElementById('BC').innerHTML = items.filter(Boolean).map((it, i) =>
+        `${i ? '<span style="color:var(--bd)">›</span>' : ''}<span class="bcl" onclick="${it.fn || ''}">${it.label}</span>`
+      ).join('');
+    }
+
+    // ═══ BELL CURVE ═══
+    function drawBell(cid) {
+      const canvas = document.getElementById('BC_' + cid); if (!canvas) return;
+      const scores = courseStudents(cid).map(s => calcTotal(cid, s.id));
+      const W = canvas.offsetWidth || 500; canvas.width = W; canvas.height = 150;
+      const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, W, 150);
+      if (scores.length < 2) {
+        ctx.fillStyle = '#8b949e'; ctx.font = '12px Tajawal';
+        ctx.textAlign = 'center'; ctx.fillText('أضف طلاباً لرسم التوزيع', W / 2, 75);
+        return;
+      }
+      const st = normalStats(scores); if (!st.std) return;
+      const gauss = x => Math.exp(-.5 * Math.pow((x - st.mean) / st.std, 2));
+      const pts = Array.from({ length: 300 }, (_, i) => { const x = i / 299 * 100; return { x, y: gauss(x) }; });
+      const my = Math.max(...pts.map(p => p.y));
+      const tx = x => (x / 100) * W, ty = y => 143 - (y / my) * 132;
+      [[0, 60, 'rgba(248,81,73,.1)'], [60, 70, 'rgba(210,153,34,.1)'], [70, 80, 'rgba(56,189,248,.1)'], [80, 90, 'rgba(63,185,80,.1)'], [90, 100, 'rgba(188,140,255,.12)']].forEach(([f, t, c]) => {
+        const zp = pts.filter(p => p.x >= f && p.x <= t); if (!zp.length) return;
+        ctx.beginPath(); ctx.moveTo(tx(zp[0].x), ty(zp[0].y));
+        zp.forEach(p => ctx.lineTo(tx(p.x), ty(p.y)));
+        ctx.lineTo(tx(zp[zp.length - 1].x), 143); ctx.lineTo(tx(zp[0].x), 143);
+        ctx.closePath(); ctx.fillStyle = c; ctx.fill();
+      });
+      [60, 70, 80, 90].forEach((th, i) => {
+        ctx.beginPath(); ctx.moveTo(tx(th), 2); ctx.lineTo(tx(th), 143);
+        ctx.strokeStyle = ['#f85149', '#d29922', '#38bdf8', '#bc8cff'][i];
+        ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
+      });
+      const gr = ctx.createLinearGradient(0, 0, W, 0);
+      gr.addColorStop(0, 'rgba(248,81,73,.9)'); gr.addColorStop(.4, 'rgba(210,153,34,.9)');
+      gr.addColorStop(.75, 'rgba(63,185,80,.9)'); gr.addColorStop(1, 'rgba(188,140,255,.9)');
+      ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(tx(p.x), ty(p.y)) : ctx.moveTo(tx(p.x), ty(p.y)));
+      ctx.strokeStyle = gr; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.stroke();
+      scores.forEach(sc => {
+        ctx.beginPath(); ctx.arc(tx(sc), ty(gauss(sc)) - 6, 4, 0, Math.PI * 2);
+        ctx.fillStyle = GC[getGr(sc).g]; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.2)'; ctx.lineWidth = 1.5; ctx.stroke();
+      });
+      ctx.beginPath(); ctx.moveTo(tx(st.mean), 2); ctx.lineTo(tx(st.mean), 143);
+      ctx.strokeStyle = 'rgba(88,166,255,.4)'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.stroke(); ctx.setLineDash([]);
+    }
+
+    // ═══ LOGIN ═══
+    function pickRole(r) {
+      loginRole = r;
+      document.getElementById('rDoc').classList.toggle('on', r === 'doctor');
+      document.getElementById('rStud').classList.toggle('on', r === 'student');
+    }
+    function doLogin() {
+      const usr = document.getElementById('lUsr').value.trim();
+      const pwd = document.getElementById('lPwd').value;
+      const u = DB.users.find(u => u.id === usr && u.pwd === pwd && u.role === loginRole);
+      if (!u) { alert('بيانات غير صحيحة'); return; }
+      CU = u; activeC = myCourses()[0]?.id || null; showApp();
+    }
+    function doLogout() {
+      CU = null; activeC = null;
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('LP').style.display = 'flex';
+      document.getElementById('lPwd').value = '';
+    }
+    function showApp() {
+      document.getElementById('LP').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      document.getElementById('HAV').src = CU.avatar || '';
+      buildSB(); buildNotifs(); goHome();
+    }
+    function goHome() { goTab('dash'); }
+
+    // ═══ SHELL ═══
+    function buildSB() {
+      const isDoc = CU.role === 'doctor';
+      const items = isDoc ? [
+        { id: 'dash',     ic: '📊', lb: 'لوحة التحكم' },
+        { id: 'grades',   ic: '✏️', lb: 'إدخال الدرجات' },
+        { id: 'students', ic: '👥', lb: 'الطلاب' },
+        { id: 'schema',   ic: '⚖️', lb: 'توزيع الدرجات' },
+        'div',
+        { id: 'alerts',   ic: '🚨', lb: 'التنبيهات' },
+        { id: 'report',   ic: '📋', lb: 'التقرير' },
+        'div',
+        { id: 'profile',  ic: '👤', lb: 'ملفي الشخصي' },
+      ] : [
+        { id: 'dash',    ic: '🏠', lb: 'الرئيسية' },
+        { id: 'grades',  ic: '📊', lb: 'درجاتي' },
+        { id: 'recs',    ic: '💡', lb: 'التوصيات' },
+        'div',
+        { id: 'profile', ic: '👤', lb: 'ملفي الشخصي' },
+      ];
+      document.getElementById('SB').innerHTML = items.map(it => {
+        if (it === 'div') return '<div class="sdv"></div>';
+        return `<button class="si" id="sb-${it.id}" onclick="goTab('${it.id}')"><span class="ic">${it.ic}</span>${it.lb}</button>`;
+      }).join('');
+    }
+
+    function markTab(id) {
+      document.querySelectorAll('.si').forEach(b => b.classList.remove('on'));
+      const el = document.getElementById('sb-' + id); if (el) el.classList.add('on');
+    }
+
+    function goTab(tab) {
+      markTab(tab);
+      const mn = document.getElementById('MN');
+      if (CU.role === 'doctor') {
+        if (tab === 'dash')     { setBc([{ lb: 'لوحة التحكم' }]);    mn.innerHTML = buildDocDash();    setTimeout(() => myCourses().forEach(c => drawBell(c.id)), 60); }
+        else if (tab === 'grades')   { setBc([{ lb: 'إدخال الدرجات' }]); mn.innerHTML = buildGradeEntry(); }
+        else if (tab === 'students') { setBc([{ lb: 'الطلاب' }]);         mn.innerHTML = buildDocStudents(); }
+        else if (tab === 'schema')   { setBc([{ lb: 'توزيع الدرجات' }]);  mn.innerHTML = buildSchema(); }
+        else if (tab === 'alerts')   { setBc([{ lb: 'التنبيهات' }]);      mn.innerHTML = buildAlerts(); }
+        else if (tab === 'report')   { setBc([{ lb: 'التقرير' }]);        mn.innerHTML = buildReport(); setTimeout(() => myCourses().forEach(c => drawBell(c.id)), 60); }
+        else if (tab === 'profile')  { setBc([{ lb: 'ملفي الشخصي' }]);   mn.innerHTML = buildProfile(); }
+      } else {
+        if (tab === 'dash')    { setBc([{ lb: 'الرئيسية' }]);    mn.innerHTML = buildStudDash(); }
+        else if (tab === 'grades')  { setBc([{ lb: 'درجاتي' }]);   mn.innerHTML = buildStudGradesPage(); }
+        else if (tab === 'recs')    { setBc([{ lb: 'التوصيات' }]);  mn.innerHTML = buildRecsPage(); }
+        else if (tab === 'profile') { setBc([{ lb: 'ملفي الشخصي' }]); mn.innerHTML = buildProfile(); }
+      }
+    }
+
+    // ═══ COURSE SELECTOR ═══
+    function cSel(selFn) {
+      return `<div class="csel">${myCourses().map(c =>
+        `<button class="csb ${c.id === activeC ? 'on' : ''}" onclick="${selFn}('${c.id}')">${c.name}</button>`
+      ).join('')}</div>`;
+    }
+
+    // ═══ DOCTOR: DASHBOARD ═══
+    function buildDocDash() {
+      const courses = myCourses();
+      if (!courses.length) return `<div class="card" style="text-align:center;padding:40px;color:var(--mu)">لا توجد مقررات</div>`;
+      const c = aC();
+      const studs = courseStudents(c.id);
+      const scores = studs.map(s => calcTotal(c.id, s.id));
+      const st = normalStats(scores);
+      const excellent = scores.filter(s => s >= 90).length;
+      const atrisk = scores.filter(s => s < 60).length;
+      const passRate = scores.length ? Math.round((scores.length - atrisk) / scores.length * 100) : 0;
+      const risk = riskAnalysis(c.id);
+      const alerts = getSmartAlerts();
+
+      return `
   ${cSel('selDash')}
   <div class="g4 mb12">
     <div class="stat s-b"><div class="sv">${studs.length}</div><div class="sl">طلاب</div></div>
@@ -617,131 +1204,135 @@ function buildDocDash(){
       <div style="margin-top:8px;padding:8px 12px;background:var(--sf);border-radius:8px;font-size:12px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between">
         <span>Mean: <b style="color:var(--pri)">${st.mean}</b></span>
         <span>Std: <b style="color:var(--pri)">${st.std}</b></span>
-        <span style="color:${st.shape.includes('🎉')?'var(--gr)':st.shape.includes('⚠️')?'var(--re)':'var(--pri)'};font-weight:700">${st.shape}</span>
+        <span style="color:${st.shape.includes('🎉') ? 'var(--gr)' : st.shape.includes('⚠️') ? 'var(--re)' : 'var(--pri)'};font-weight:700">${st.shape}</span>
       </div>
     </div>
     <div>
-      ${risk?`<div class="card mb12">
+      ${risk ? `<div class="card mb12">
         <div class="ch">🔬 Risk Analysis</div>
-        <div style="padding:10px 14px;border-radius:9px;${risk.critical?'background:var(--rl)':'background:var(--gl)'};margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+        <div style="padding:10px 14px;border-radius:9px;${risk.critical ? 'background:var(--rl)' : 'background:var(--gl)'};margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
           <div>
-            <div style="font-weight:700;color:${risk.critical?'var(--re)':'var(--gr)'}">${risk.critical?'🚨 CRITICAL: >40% at risk!':'✅ Class Stable'}</div>
+            <div style="font-weight:700;color:${risk.critical ? 'var(--re)' : 'var(--gr)'}">${risk.critical ? '🚨 CRITICAL: >40% at risk!' : '✅ Class Stable'}</div>
             <div style="font-size:11px;color:var(--mu)">p = ${risk.pF} | ${risk.atRisk}/${risk.n}</div>
           </div>
-          <div style="font-size:28px;font-weight:900;font-family:Cairo,sans-serif;color:${risk.critical?'var(--re)':'var(--gr)'}">${Math.round(risk.pF*100)}%</div>
+          <div style="font-size:28px;font-weight:900;font-family:Cairo,sans-serif;color:${risk.critical ? 'var(--re)' : 'var(--gr)'}">${Math.round(risk.pF * 100)}%</div>
         </div>
-        ${risk.details.filter(d=>d.flagged).slice(0,3).map(d=>`
+        ${risk.details.filter(d => d.flagged).slice(0, 3).map(d => `
           <div class="al al-d" style="margin-bottom:6px">⚠️
-            <div><b>${d.name}</b> — ${d.w.slice(0,2).join(', ')}
+            <div><b>${d.name}</b> — ${d.w.slice(0, 2).join(', ')}
               <button class="btn-xs bx-a" style="margin-right:8px" onclick="viewStudent('${c.id}','${d.id}')">عرض</button>
             </div>
           </div>`).join('')}
-      </div>`:''}
+      </div>` : ''}
       <div class="card">
         <div class="ch">⚡ التنبيهات <span style="font-size:10px;color:var(--mu);font-weight:400">(${alerts.length})</span></div>
-        ${!alerts.length?'<p style="text-align:center;color:var(--mu);padding:16px;font-size:13px">لا توجد تنبيهات 🎉</p>':
-          alerts.slice(0,4).map(a=>{
-            const m={fail:['al-d','🚨','خطر الرسوب'],drop:['al-w','📉','انخفاض'],warn:['al-w','⚠️','تحذير']};
-            const[cls,ic,lb]=m[a.type]||['al-w','⚠️',''];
-            return`<div class="al ${cls}">${ic}<div><b>${a.name}</b> — ${lb}<br><small>${a.detail}</small></div></div>`;
+        ${!alerts.length ? '<p style="text-align:center;color:var(--mu);padding:16px;font-size:13px">لا توجد تنبيهات 🎉</p>' :
+          alerts.slice(0, 4).map(a => {
+            const m = { fail: ['al-d', '🚨', 'خطر الرسوب'], drop: ['al-w', '📉', 'انخفاض'], warn: ['al-w', '⚠️', 'تحذير'] };
+            const [cls, ic, lb] = m[a.type] || ['al-w', '⚠️', ''];
+            return `<div class="al ${cls}">${ic}<div><b>${a.name}</b> — ${lb}<br><small>${a.detail}</small></div></div>`;
           }).join('')}
       </div>
     </div>
   </div>`;
-}
-function selDash(cid){activeC=cid;goTab('dash');}
+    }
+    function selDash(cid) { activeC = cid; goTab('dash'); }
 
-// ═══ DOCTOR: GRADE ENTRY ═══
-function buildGradeEntry(){
-  const c=aC();if(!c)return`<div class="card"><p style="color:var(--mu);padding:20px;text-align:center">لا توجد مقررات</p></div>`;
-  const studs=courseStudents(c.id);const sc=c.schema;
-  const qm=qMaxes(sc);const hm=hMaxes(sc);
+    // ═══ DOCTOR: GRADE ENTRY ═══
+    function buildGradeEntry() {
+      const c = aC(); if (!c) return `<div class="card"><p style="color:var(--mu);padding:20px;text-align:center">لا توجد مقررات</p></div>`;
+      const studs = courseStudents(c.id); const sc = c.schema;
+      const qm = qMaxes(sc); const hm = hMaxes(sc);
+      const tabs = ['quiz', 'hw', 'mid', 'proj'];
+      const tabNames = {
+        quiz: `CE Quizzes (${qm.length}×${qm[0]})`,
+        hw: `HW (${hm.length}×${hm[0]})`,
+        mid: 'Midterm',
+        proj: 'Project'
+      };
+      const activeTab = window._gradeTab || 'quiz';
 
-  const tabs=['quiz','hw','mid','proj'];
-  const tabNames={quiz:`Quizzes (${qm.length})`,hw:`HW (${hm.length})`,mid:'Midterm',proj:'Project'};
-  const activeTab=window._gradeTab||'quiz';
-
-  let tableContent='';
-  if(activeTab==='quiz'){
-    tableContent=`<table class="tbl">
-      <thead><tr><th>الطالب</th>${qm.map((mx,i)=>`<th>Q${i+1}/${mx}</th>`).join('')}<th>Weighted</th></tr></thead>
-      <tbody>${studs.map(s=>{
-        const g=getG(c.id,s.id);const scores=g.quizzes||[];
-        const weighted=calcSection(c.id,s.id,'quiz');
-        return`<tr>
+      let tableContent = '';
+      if (activeTab === 'quiz') {
+        tableContent = `<table class="tbl">
+      <thead><tr><th>الطالب</th>${qm.map((mx, i) => `<th>CE${i + 1}/${mx}</th>`).join('')}<th>Weighted</th></tr></thead>
+      <tbody>${studs.map(s => {
+          const g = getG(c.id, s.id); const scores = g.quizzes || [];
+          const weighted = calcSection(c.id, s.id, 'quiz');
+          return `<tr>
           <td><b>${s.name}</b><div style="font-size:10px;color:var(--mu)">${s.id}</div></td>
-          ${qm.map((mx,i)=>`
-            <td><input class="sin ${scores[i]!=null&&scores[i]<mx*0.5?'warn':''}" type="number"
-              id="q_${s.id}_${i}" value="${scores[i]??''}" min="0" max="${mx}"
-              oninput="updateGradeRow('${c.id}','${s.id}')" style="width:54px">
+          ${qm.map((mx, i) => `
+            <td><input class="sin ${scores[i] != null && scores[i] < mx * 0.5 ? 'warn' : ''}" type="number"
+              id="q_${s.id}_${i}" value="${scores[i] ?? ''}" min="0" max="${mx}"
+              oninput="updateGradeRow('${c.id}','${s.id}')" style="width:50px">
             <div style="font-size:9px;color:var(--mu);text-align:center">/${mx}</div></td>`).join('')}
           <td id="qw_${s.id}" style="font-weight:700;color:var(--gr)">${weighted}</td>
         </tr>`;
-      }).join('')}</tbody>
+        }).join('')}</tbody>
     </table>`;
-  } else if(activeTab==='hw'){
-    tableContent=`<table class="tbl">
-      <thead><tr><th>الطالب</th>${hm.map((mx,i)=>`<th>HW${i+1}/${mx}</th>`).join('')}<th>Weighted</th></tr></thead>
-      <tbody>${studs.map(s=>{
-        const g=getG(c.id,s.id);const scores=g.hws||[];
-        const weighted=calcSection(c.id,s.id,'hw');
-        return`<tr>
+      } else if (activeTab === 'hw') {
+        tableContent = `<table class="tbl">
+      <thead><tr><th>الطالب</th>${hm.map((mx, i) => `<th>HW${i + 1}/${mx}</th>`).join('')}<th>Weighted</th></tr></thead>
+      <tbody>${studs.map(s => {
+          const g = getG(c.id, s.id); const scores = g.hws || [];
+          const weighted = calcSection(c.id, s.id, 'hw');
+          return `<tr>
           <td><b>${s.name}</b><div style="font-size:10px;color:var(--mu)">${s.id}</div></td>
-          ${hm.map((mx,i)=>`
-            <td><input class="sin ${scores[i]!=null&&scores[i]<mx*0.5?'warn':''}" type="number"
-              id="h_${s.id}_${i}" value="${scores[i]??''}" min="0" max="${mx}"
+          ${hm.map((mx, i) => `
+            <td><input class="sin ${scores[i] != null && scores[i] < mx * 0.5 ? 'warn' : ''}" type="number"
+              id="h_${s.id}_${i}" value="${scores[i] ?? ''}" min="0" max="${mx}"
               oninput="updateGradeRow('${c.id}','${s.id}')" style="width:54px">
             <div style="font-size:9px;color:var(--mu);text-align:center">/${mx}</div></td>`).join('')}
           <td id="hw_${s.id}" style="font-weight:700;color:var(--gr)">${weighted}</td>
         </tr>`;
-      }).join('')}</tbody>
+        }).join('')}</tbody>
     </table>`;
-  } else if(activeTab==='mid'){
-    tableContent=`<table class="tbl">
+      } else if (activeTab === 'mid') {
+        tableContent = `<table class="tbl">
       <thead><tr><th>الطالب</th><th>Midterm/${sc.midMax}</th><th>%</th><th>Weighted</th><th>Status</th></tr></thead>
-      <tbody>${studs.map(s=>{
-        const g=getG(c.id,s.id);const mid=g.mid;
-        const pct=mid!=null?Math.round(mid/sc.midMax*100):'-';
-        const weighted=calcSection(c.id,s.id,'mid');
-        return`<tr>
+      <tbody>${studs.map(s => {
+          const g = getG(c.id, s.id); const mid = g.mid;
+          const pct = mid != null ? Math.round(mid / sc.midMax * 100) : '-';
+          const weighted = calcSection(c.id, s.id, 'mid');
+          return `<tr>
           <td><b>${s.name}</b><div style="font-size:10px;color:var(--mu)">${s.id}</div></td>
-          <td><input class="sin ${mid!=null&&mid<sc.midMax*0.5?'warn':''}" type="number"
-            id="m_${s.id}" value="${mid??''}" min="0" max="${sc.midMax}"
+          <td><input class="sin ${mid != null && mid < sc.midMax * 0.5 ? 'warn' : ''}" type="number"
+            id="m_${s.id}" value="${mid ?? ''}" min="0" max="${sc.midMax}"
             oninput="updateGradeRow('${c.id}','${s.id}')" style="width:54px"></td>
-          <td id="mp_${s.id}" style="color:var(--mu)">${pct!=='-'?pct+'%':'-'}</td>
+          <td id="mp_${s.id}" style="color:var(--mu)">${pct !== '-' ? pct + '%' : '-'}</td>
           <td id="mw_${s.id}" style="font-weight:700;color:var(--gr)">${weighted}</td>
-          <td>${mid!=null?(mid<sc.midMax*0.5?'<span style="color:var(--re);font-size:10px">⚠️ Low</span>':'<span style="color:var(--gr);font-size:10px">✅</span>'):'-'}</td>
+          <td>${mid != null ? (mid < sc.midMax * 0.5 ? '<span style="color:var(--re);font-size:10px">⚠️ Low</span>' : '<span style="color:var(--gr);font-size:10px">✅</span>') : '-'}</td>
         </tr>`;
-      }).join('')}</tbody>
+        }).join('')}</tbody>
     </table>`;
-  } else if(activeTab==='proj'){
-    tableContent=`<table class="tbl">
+      } else if (activeTab === 'proj') {
+        tableContent = `<table class="tbl">
       <thead><tr><th>الطالب</th><th>Project/${sc.projMax}</th><th>%</th><th>Weighted</th><th>Total</th><th>Grade</th></tr></thead>
-      <tbody>${studs.map(s=>{
-        const g=getG(c.id,s.id);const proj=g.proj;
-        const pct=proj!=null?Math.round(proj/sc.projMax*100):'-';
-        const weighted=calcSection(c.id,s.id,'proj');
-        const tot=calcTotal(c.id,s.id);const gr=getGr(tot);
-        return`<tr>
+      <tbody>${studs.map(s => {
+          const g = getG(c.id, s.id); const proj = g.proj;
+          const pct = proj != null ? Math.round(proj / sc.projMax * 100) : '-';
+          const weighted = calcSection(c.id, s.id, 'proj');
+          const tot = calcTotal(c.id, s.id); const gr = getGr(tot);
+          return `<tr>
           <td><b>${s.name}</b><div style="font-size:10px;color:var(--mu)">${s.id}</div></td>
           <td><input class="sin" type="number"
-            id="p_${s.id}" value="${proj??''}" min="0" max="${sc.projMax}"
+            id="p_${s.id}" value="${proj ?? ''}" min="0" max="${sc.projMax}"
             oninput="updateGradeRow('${c.id}','${s.id}')" style="width:64px"></td>
-          <td id="pp_${s.id}" style="color:var(--mu)">${pct!=='-'?pct+'%':'-'}</td>
+          <td id="pp_${s.id}" style="color:var(--mu)">${pct !== '-' ? pct + '%' : '-'}</td>
           <td id="pw_${s.id}" style="font-weight:700;color:var(--gr)">${weighted}</td>
           <td id="pt_${s.id}" style="font-weight:700;color:var(--pri)">${tot}</td>
           <td><span class="badge ${gr.cls}" id="pgr_${s.id}">${gr.g}</span></td>
         </tr>`;
-      }).join('')}</tbody>
+        }).join('')}</tbody>
     </table>`;
-  }
+      }
 
-  return`
+      return `
   ${cSel('selGrades')}
   <div class="card">
     <div class="ch">✏️ إدخال الدرجات — ${c.name}</div>
     <div class="tabs">
-      ${tabs.map(t=>`<button class="tab ${activeTab===t?'on':''}" onclick="switchGradeTab('${t}')">${tabNames[t]}</button>`).join('')}
+      ${tabs.map(t => `<button class="tab ${activeTab === t ? 'on' : ''}" onclick="switchGradeTab('${t}')">${tabNames[t]}</button>`).join('')}
     </div>
     <div style="overflow-x:auto">${tableContent}</div>
     <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
@@ -749,102 +1340,88 @@ function buildGradeEntry(){
       <button class="btn btn-gh" onclick="goTab('students')">👁 عرض الطلاب</button>
     </div>
   </div>`;
-}
-
-function switchGradeTab(t){window._gradeTab=t;goTab('grades');}
-function selGrades(cid){activeC=cid;goTab('grades');}
-
-function updateGradeRow(cid,sid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return;
-  const sc=c.schema;const tab=window._gradeTab||'quiz';
-  const qm=qMaxes(sc);const hm=hMaxes(sc);
-  if(tab==='quiz'){
-    const scores=qm.map((_,i)=>{const v=document.getElementById(`q_${sid}_${i}`)?.value;return v===''?null:+v;});
-    const valid=scores.map((v,i)=>v!=null?{v,max:qm[i]}:null).filter(Boolean);
-    const weighted=valid.length?Math.round((valid.reduce((a,{v,max})=>a+(v/max),0)/qm.length)*sc.quizWeight*10)/10:0;
-    const ew=document.getElementById('qw_'+sid);if(ew)ew.textContent=weighted;
-  } else if(tab==='hw'){
-    const scores=hm.map((_,i)=>{const v=document.getElementById(`h_${sid}_${i}`)?.value;return v===''?null:+v;});
-    const valid=scores.map((v,i)=>v!=null?{v,max:hm[i]}:null).filter(Boolean);
-    const weighted=valid.length?Math.round((valid.reduce((a,{v,max})=>a+(v/max),0)/hm.length)*sc.hwWeight*10)/10:0;
-    const ew=document.getElementById('hw_'+sid);if(ew)ew.textContent=weighted;
-  } else if(tab==='mid'){
-    const v=document.getElementById(`m_${sid}`)?.value;const mid=v===''?null:+v;
-    const pct=mid!=null?Math.round(mid/sc.midMax*100)+'%':'-';
-    const weighted=mid!=null?Math.round((mid/sc.midMax)*sc.midWeight*10)/10:0;
-    const ep=document.getElementById('mp_'+sid);if(ep)ep.textContent=pct;
-    const ew=document.getElementById('mw_'+sid);if(ew)ew.textContent=weighted;
-  } else if(tab==='proj'){
-    const v=document.getElementById(`p_${sid}`)?.value;const proj=v===''?null:+v;
-    const pct=proj!=null?Math.round(proj/sc.projMax*100)+'%':'-';
-    const weighted=proj!=null?Math.round((proj/sc.projMax)*sc.projWeight*10)/10:0;
-    const ep=document.getElementById('pp_'+sid);if(ep)ep.textContent=pct;
-    const ew=document.getElementById('pw_'+sid);if(ew)ew.textContent=weighted;
-  }
-}
-
-function saveGrades(cid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return;
-  const sc=c.schema;const tab=window._gradeTab||'quiz';
-  const qm=qMaxes(sc);const hm=hMaxes(sc);
-  courseStudents(cid).forEach(s=>{
-    if(!c.grades[s.id])c.grades[s.id]={quizzes:[],hws:[],mid:null,proj:null};
-    if(tab==='quiz'){
-      c.grades[s.id].quizzes=qm.map((mx,i)=>{
-        const v=document.getElementById(`q_${s.id}_${i}`)?.value;
-        return v===''?null:Math.min(+v,mx);
-      });
-    } else if(tab==='hw'){
-      c.grades[s.id].hws=hm.map((mx,i)=>{
-        const v=document.getElementById(`h_${s.id}_${i}`)?.value;
-        return v===''?null:Math.min(+v,mx);
-      });
-    } else if(tab==='mid'){
-      const v=document.getElementById(`m_${s.id}`)?.value;
-      c.grades[s.id].mid=v===''?null:Math.min(+v,sc.midMax);
-    } else if(tab==='proj'){
-      const v=document.getElementById(`p_${s.id}`)?.value;
-      c.grades[s.id].proj=v===''?null:Math.min(+v,sc.projMax);
     }
-  });
-  buildNotifs();
-  const btn=document.querySelector(`button[onclick="saveGrades('${cid}')"]`);
-  if(btn){btn.textContent='✅ تم!';btn.style.background='var(--gr)';
-    setTimeout(()=>{btn.textContent='💾 حفظ';btn.style.background='';},2000);}
-}
 
-// ═══ DOCTOR: SCHEMA EDITOR ═══
-function buildSchema(){
-  const c=aC();if(!c)return`<div class="card"><p style="color:var(--mu);padding:20px;text-align:center">لا توجد مقررات</p></div>`;
-  const sc=c.schema;
-  const tw=totalWeight(sc);const ok=tw===100;
-  return`
+    function switchGradeTab(t) { window._gradeTab = t; goTab('grades'); }
+    function selGrades(cid) { activeC = cid; goTab('grades'); }
+
+    function updateGradeRow(cid, sid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return;
+      const sc = c.schema; const tab = window._gradeTab || 'quiz';
+      const qm = qMaxes(sc); const hm = hMaxes(sc);
+      if (tab === 'quiz') {
+        const scores = qm.map((_, i) => { const v = document.getElementById(`q_${sid}_${i}`)?.value; return v === '' ? null : +v; });
+        const valid = scores.map((v, i) => v != null ? { v, max: qm[i] } : null).filter(Boolean);
+        const weighted = valid.length ? Math.round((valid.reduce((a, { v, max }) => a + (v / max), 0) / qm.length) * sc.quizWeight * 10) / 10 : 0;
+        const ew = document.getElementById('qw_' + sid); if (ew) ew.textContent = weighted;
+      } else if (tab === 'hw') {
+        const scores = hm.map((_, i) => { const v = document.getElementById(`h_${sid}_${i}`)?.value; return v === '' ? null : +v; });
+        const valid = scores.map((v, i) => v != null ? { v, max: hm[i] } : null).filter(Boolean);
+        const weighted = valid.length ? Math.round((valid.reduce((a, { v, max }) => a + (v / max), 0) / hm.length) * sc.hwWeight * 10) / 10 : 0;
+        const ew = document.getElementById('hw_' + sid); if (ew) ew.textContent = weighted;
+      } else if (tab === 'mid') {
+        const v = document.getElementById(`m_${sid}`)?.value; const mid = v === '' ? null : +v;
+        const pct = mid != null ? Math.round(mid / sc.midMax * 100) + '%' : '-';
+        const weighted = mid != null ? Math.round((mid / sc.midMax) * sc.midWeight * 10) / 10 : 0;
+        const ep = document.getElementById('mp_' + sid); if (ep) ep.textContent = pct;
+        const ew = document.getElementById('mw_' + sid); if (ew) ew.textContent = weighted;
+      } else if (tab === 'proj') {
+        const v = document.getElementById(`p_${sid}`)?.value; const proj = v === '' ? null : +v;
+        const pct = proj != null ? Math.round(proj / sc.projMax * 100) + '%' : '-';
+        const weighted = proj != null ? Math.round((proj / sc.projMax) * sc.projWeight * 10) / 10 : 0;
+        const ep = document.getElementById('pp_' + sid); if (ep) ep.textContent = pct;
+        const ew = document.getElementById('pw_' + sid); if (ew) ew.textContent = weighted;
+      }
+    }
+
+    function saveGrades(cid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return;
+      const sc = c.schema; const tab = window._gradeTab || 'quiz';
+      const qm = qMaxes(sc); const hm = hMaxes(sc);
+      courseStudents(cid).forEach(s => {
+        if (!c.grades[s.id]) c.grades[s.id] = { quizzes: [], hws: [], mid: null, proj: null };
+        if (tab === 'quiz') {
+          c.grades[s.id].quizzes = qm.map((mx, i) => { const v = document.getElementById(`q_${s.id}_${i}`)?.value; return v === '' ? null : Math.min(+v, mx); });
+        } else if (tab === 'hw') {
+          c.grades[s.id].hws = hm.map((mx, i) => { const v = document.getElementById(`h_${s.id}_${i}`)?.value; return v === '' ? null : Math.min(+v, mx); });
+        } else if (tab === 'mid') {
+          const v = document.getElementById(`m_${s.id}`)?.value;
+          c.grades[s.id].mid = v === '' ? null : Math.min(+v, sc.midMax);
+        } else if (tab === 'proj') {
+          const v = document.getElementById(`p_${s.id}`)?.value;
+          c.grades[s.id].proj = v === '' ? null : Math.min(+v, sc.projMax);
+        }
+      });
+      buildNotifs();
+      const btn = document.querySelector(`button[onclick="saveGrades('${cid}')"]`);
+      if (btn) { btn.textContent = '✅ تم!'; btn.style.background = 'var(--gr)'; setTimeout(() => { btn.textContent = '💾 حفظ'; btn.style.background = ''; }, 2000); }
+    }
+
+    // ═══ DOCTOR: SCHEMA EDITOR ═══
+    function buildSchema() {
+      const c = aC(); if (!c) return `<div class="card"><p style="color:var(--mu);padding:20px;text-align:center">لا توجد مقررات</p></div>`;
+      const sc = c.schema;
+      return `
   ${cSel('selSchema')}
   <div class="card">
     <div class="ch">⚖️ توزيع الدرجات — ${c.name}</div>
     <p style="font-size:12px;color:var(--mu);margin-bottom:16px">عدّل عدد الاختبارات والواجبات وأوزانها. المجموع يجب أن يكون 100%.</p>
-
-    <!-- Quiz config -->
     <div style="background:var(--sf);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid var(--bd)">
-      <div style="font-weight:700;font-size:13px;color:var(--cy);margin-bottom:10px">📝 الاختبارات (Quizzes)</div>
+      <div style="font-weight:700;font-size:13px;color:var(--cy);margin-bottom:10px">📝 CE Quizzes</div>
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
-        <div><label style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">عدد الاختبارات</label>
+        <div><label style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">عدد الـ CE</label>
           <input class="de-inp" type="number" id="sc_qc" value="${qMaxes(sc).length}" min="1" max="10" oninput="updateQuizInputs('${c.id}')" style="width:70px"></div>
-        <div><label style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">وزن الاختبارات % (مجموع)</label>
+        <div><label style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">وزن الاختبارات %</label>
           <input class="de-inp" type="number" id="sc_qw" value="${sc.quizWeight}" min="0" max="100" oninput="previewSchema('${c.id}')" style="width:80px"></div>
       </div>
-      <div style="font-size:11px;color:var(--mu);margin-bottom:6px">درجة كل اختبار (من):</div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:6px">درجة كل CE (من):</div>
       <div id="quizMaxInputs" style="display:flex;gap:8px;flex-wrap:wrap">
-        ${qMaxes(sc).map((mx,i)=>`<div style="text-align:center">
-          <label style="font-size:10px;color:var(--mu);display:block">Q${i+1}</label>
-          <input class="de-inp" type="number" id="sc_qm_${i}" value="${mx}" min="1" max="200" oninput="previewSchema('${c.id}')" style="width:58px">
-        </div>`).join('')}
+        ${qMaxes(sc).map((mx, i) => `<div style="text-align:center"><label style="font-size:10px;color:var(--mu);display:block">CE${i + 1}</label>
+          <input class="de-inp" type="number" id="sc_qm_${i}" value="${mx}" min="1" max="200" oninput="previewSchema('${c.id}')" style="width:58px"></div>`).join('')}
       </div>
     </div>
-
-    <!-- HW config -->
     <div style="background:var(--sf);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid var(--bd)">
-      <div style="font-weight:700;font-size:13px;color:var(--gr);margin-bottom:10px">📚 الواجبات (Homeworks)</div>
+      <div style="font-weight:700;font-size:13px;color:var(--gr);margin-bottom:10px">📚 الواجبات (HW)</div>
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
         <div><label style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">عدد الواجبات</label>
           <input class="de-inp" type="number" id="sc_hc" value="${hMaxes(sc).length}" min="1" max="15" oninput="updateHwInputs('${c.id}')" style="width:70px"></div>
@@ -853,17 +1430,13 @@ function buildSchema(){
       </div>
       <div style="font-size:11px;color:var(--mu);margin-bottom:6px">درجة كل واجب (من):</div>
       <div id="hwMaxInputs" style="display:flex;gap:8px;flex-wrap:wrap">
-        ${hMaxes(sc).map((mx,i)=>`<div style="text-align:center">
-          <label style="font-size:10px;color:var(--mu);display:block">HW${i+1}</label>
-          <input class="de-inp" type="number" id="sc_hm_${i}" value="${mx}" min="1" max="200" oninput="previewSchema('${c.id}')" style="width:58px">
-        </div>`).join('')}
+        ${hMaxes(sc).map((mx, i) => `<div style="text-align:center"><label style="font-size:10px;color:var(--mu);display:block">HW${i + 1}</label>
+          <input class="de-inp" type="number" id="sc_hm_${i}" value="${mx}" min="1" max="200" oninput="previewSchema('${c.id}')" style="width:58px"></div>`).join('')}
       </div>
     </div>
-
-    <!-- Mid + Project -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
       <div style="background:var(--sf);border-radius:10px;padding:14px;border:1px solid var(--bd)">
-        <div style="font-weight:700;font-size:13px;color:var(--or);margin-bottom:10px">📋 الاختبار النصفي (Midterm)</div>
+        <div style="font-weight:700;font-size:13px;color:var(--or);margin-bottom:10px">📋 الاختبار النصفي</div>
         <div style="display:flex;gap:10px">
           <div><label style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">من</label>
             <input class="de-inp" type="number" id="sc_mm" value="${sc.midMax}" min="1" max="100" oninput="previewSchema('${c.id}')" style="width:70px"></div>
@@ -872,7 +1445,7 @@ function buildSchema(){
         </div>
       </div>
       <div style="background:var(--sf);border-radius:10px;padding:14px;border:1px solid var(--bd)">
-        <div style="font-weight:700;font-size:13px;color:var(--pu);margin-bottom:10px">🗂️ المشروع (Project)</div>
+        <div style="font-weight:700;font-size:13px;color:var(--pu);margin-bottom:10px">🗂️ المشروع</div>
         <div style="display:flex;gap:10px">
           <div><label style="font-size:11px;color:var(--mu);display:block;margin-bottom:4px">من</label>
             <input class="de-inp" type="number" id="sc_pm" value="${sc.projMax}" min="1" max="100" oninput="previewSchema('${c.id}')" style="width:70px"></div>
@@ -881,109 +1454,98 @@ function buildSchema(){
         </div>
       </div>
     </div>
-
-    <!-- Live preview -->
     <div id="schemaPreview">${buildSchemaPreview(c.id)}</div>
-
     <div style="display:flex;gap:10px;margin-top:14px">
       <button class="btn btn-p" onclick="saveSchema('${c.id}')">💾 حفظ التوزيع</button>
       <button class="btn btn-gh" onclick="goTab('schema')">↺ إلغاء</button>
     </div>
   </div>`;
-}
+    }
 
-function buildSchemaPreview(cid){
-  const sc=aC()?.schema;if(!sc)return'';
-  const qw=+(document.getElementById('sc_qw')?.value??sc.quizWeight);
-  const hw=+(document.getElementById('sc_hw')?.value??sc.hwWeight);
-  const mw=+(document.getElementById('sc_mw')?.value??sc.midWeight);
-  const pw=+(document.getElementById('sc_pw')?.value??sc.projWeight);
-  const tw=qw+hw+mw+pw;const ok=tw===100;
-  const bars=[{lb:'Quizzes',w:qw,col:'var(--cy)'},{lb:'HW',w:hw,col:'var(--gr)'},{lb:'Mid',w:mw,col:'var(--or)'},{lb:'Project',w:pw,col:'var(--pu)'}];
-  return`<div style="background:var(--sf);border-radius:10px;padding:14px;border:1px solid ${ok?'var(--gr)':'var(--re)'}">
+    function buildSchemaPreview(cid) {
+      const sc = aC()?.schema; if (!sc) return '';
+      const qw = +(document.getElementById('sc_qw')?.value ?? sc.quizWeight);
+      const hw = +(document.getElementById('sc_hw')?.value ?? sc.hwWeight);
+      const mw = +(document.getElementById('sc_mw')?.value ?? sc.midWeight);
+      const pw = +(document.getElementById('sc_pw')?.value ?? sc.projWeight);
+      const tw = qw + hw + mw + pw; const ok = tw === 100;
+      const bars = [{ lb: 'CE Quizzes', w: qw, col: 'var(--cy)' }, { lb: 'HW', w: hw, col: 'var(--gr)' }, { lb: 'Mid', w: mw, col: 'var(--or)' }, { lb: 'Project', w: pw, col: 'var(--pu)' }];
+      return `<div style="background:var(--sf);border-radius:10px;padding:14px;border:1px solid ${ok ? 'var(--gr)' : 'var(--re)'}">
     <div style="display:flex;justify-content:space-between;margin-bottom:10px">
       <span style="font-weight:700;font-size:12px">معاينة التوزيع</span>
-      <span style="font-weight:700;font-size:12px;color:${ok?'var(--gr)':'var(--re)'}">${ok?'✅ مجموع = 100%':'⚠️ مجموع = '+tw+'%'}</span>
+      <span style="font-weight:700;font-size:12px;color:${ok ? 'var(--gr)' : 'var(--re)'}">${ok ? '✅ مجموع = 100%' : '⚠️ مجموع = ' + tw + '%'}</span>
     </div>
-    ${bars.map(b=>`<div style="margin-bottom:8px">
+    ${bars.map(b => `<div style="margin-bottom:8px">
       <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
-        <span style="font-weight:600">${b.lb}</span>
-        <span style="font-weight:700;color:${b.col}">${b.w}%</span>
+        <span style="font-weight:600">${b.lb}</span><span style="font-weight:700;color:${b.col}">${b.w}%</span>
       </div>
       <div class="pw"><div class="pb" style="width:${b.w}%;background:${b.col}"></div></div>
     </div>`).join('')}
   </div>`;
-}
+    }
 
-function previewSchema(cid){
-  const el=document.getElementById('schemaPreview');
-  if(el)el.innerHTML=buildSchemaPreview(cid);
-}
+    function previewSchema(cid) { const el = document.getElementById('schemaPreview'); if (el) el.innerHTML = buildSchemaPreview(cid); }
+    function updateQuizInputs(cid) {
+      const n = +document.getElementById('sc_qc')?.value || 1;
+      const cur = document.getElementById('quizMaxInputs'); if (!cur) return;
+      cur.innerHTML = Array.from({ length: n }, (_, i) => {
+        const old = document.getElementById('sc_qm_' + i)?.value;
+        return `<div style="text-align:center"><label style="font-size:10px;color:var(--mu);display:block">CE${i + 1}</label><input class="de-inp" type="number" id="sc_qm_${i}" value="${old || 5}" min="1" max="200" oninput="previewSchema('${cid}')" style="width:58px"></div>`;
+      }).join(''); previewSchema(cid);
+    }
+    function updateHwInputs(cid) {
+      const n = +document.getElementById('sc_hc')?.value || 1;
+      const cur = document.getElementById('hwMaxInputs'); if (!cur) return;
+      cur.innerHTML = Array.from({ length: n }, (_, i) => {
+        const old = document.getElementById('sc_hm_' + i)?.value;
+        return `<div style="text-align:center"><label style="font-size:10px;color:var(--mu);display:block">HW${i + 1}</label><input class="de-inp" type="number" id="sc_hm_${i}" value="${old || 20}" min="1" max="200" oninput="previewSchema('${cid}')" style="width:58px"></div>`;
+      }).join(''); previewSchema(cid);
+    }
 
-function updateQuizInputs(cid){
-  const n=+document.getElementById('sc_qc')?.value||1;
-  const cur=document.getElementById('quizMaxInputs');if(!cur)return;
-  const existing=Array.from({length:n},(_,i)=>{
-    const old=document.getElementById('sc_qm_'+i)?.value;
-    return`<div style="text-align:center"><label style="font-size:10px;color:var(--mu);display:block">Q${i+1}</label><input class="de-inp" type="number" id="sc_qm_${i}" value="${old||20}" min="1" max="200" oninput="previewSchema('${cid}')" style="width:58px"></div>`;
-  });
-  cur.innerHTML=existing.join('');previewSchema(cid);
-}
-function updateHwInputs(cid){
-  const n=+document.getElementById('sc_hc')?.value||1;
-  const cur=document.getElementById('hwMaxInputs');if(!cur)return;
-  const existing=Array.from({length:n},(_,i)=>{
-    const old=document.getElementById('sc_hm_'+i)?.value;
-    return`<div style="text-align:center"><label style="font-size:10px;color:var(--mu);display:block">HW${i+1}</label><input class="de-inp" type="number" id="sc_hm_${i}" value="${old||20}" min="1" max="200" oninput="previewSchema('${cid}')" style="width:58px"></div>`;
-  });
-  cur.innerHTML=existing.join('');previewSchema(cid);
-}
+    function saveSchema(cid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return;
+      const qc = +document.getElementById('sc_qc').value || 1;
+      const hc = +document.getElementById('sc_hc').value || 1;
+      const qw = +document.getElementById('sc_qw').value || 0;
+      const hw = +document.getElementById('sc_hw').value || 0;
+      const mm = +document.getElementById('sc_mm').value || 20;
+      const mw = +document.getElementById('sc_mw').value || 0;
+      const pm = +document.getElementById('sc_pm').value || 100;
+      const pw = +document.getElementById('sc_pw').value || 0;
+      if (qw + hw + mw + pw !== 100) { alert('مجموع الأوزان يجب أن يكون 100%'); return; }
+      const newQMaxes = Array.from({ length: qc }, (_, i) => +document.getElementById('sc_qm_' + i)?.value || 5);
+      const newHMaxes = Array.from({ length: hc }, (_, i) => +document.getElementById('sc_hm_' + i)?.value || 20);
+      Object.values(c.grades).forEach(g => {
+        while ((g.quizzes || []).length < qc) g.quizzes = (g.quizzes || []).concat([null]);
+        g.quizzes = (g.quizzes || []).slice(0, qc);
+        while ((g.hws || []).length < hc) g.hws = (g.hws || []).concat([null]);
+        g.hws = (g.hws || []).slice(0, hc);
+      });
+      c.schema = { quizMaxes: newQMaxes, quizWeight: qw, hwMaxes: newHMaxes, hwWeight: hw, midMax: mm, midWeight: mw, projMax: pm, projWeight: pw };
+      alert('✅ تم حفظ التوزيع!'); goTab('schema');
+    }
+    function selSchema(cid) { activeC = cid; goTab('schema'); }
 
-function saveSchema(cid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return;
-  const qc=+document.getElementById('sc_qc').value||1;
-  const hc=+document.getElementById('sc_hc').value||1;
-  const qw=+document.getElementById('sc_qw').value||0;
-  const hw=+document.getElementById('sc_hw').value||0;
-  const mm=+document.getElementById('sc_mm').value||20;
-  const mw=+document.getElementById('sc_mw').value||0;
-  const pm=+document.getElementById('sc_pm').value||100;
-  const pw=+document.getElementById('sc_pw').value||0;
-  if(qw+hw+mw+pw!==100){alert('مجموع الأوزان يجب أن يكون 100%');return;}
-  const newQMaxes=Array.from({length:qc},(_,i)=>+document.getElementById('sc_qm_'+i)?.value||20);
-  const newHMaxes=Array.from({length:hc},(_,i)=>+document.getElementById('sc_hm_'+i)?.value||20);
-  // Adjust grade arrays
-  Object.values(c.grades).forEach(g=>{
-    while((g.quizzes||[]).length<qc)g.quizzes=(g.quizzes||[]).concat([null]);
-    g.quizzes=(g.quizzes||[]).slice(0,qc);
-    while((g.hws||[]).length<hc)g.hws=(g.hws||[]).concat([null]);
-    g.hws=(g.hws||[]).slice(0,hc);
-  });
-  c.schema={quizMaxes:newQMaxes,quizWeight:qw,hwMaxes:newHMaxes,hwWeight:hw,midMax:mm,midWeight:mw,projMax:pm,projWeight:pw};
-  alert('✅ تم حفظ التوزيع!');goTab('schema');
-}
-function selSchema(cid){activeC=cid;goTab('schema');}
-
-// ═══ DOCTOR: STUDENTS + STUDENT PROFILE ═══
-function buildDocStudents(){
-  const c=aC();if(!c)return`<div class="card"><p style="color:var(--mu);padding:20px;text-align:center">لا توجد مقررات</p></div>`;
-  const studs=courseStudents(c.id);
-  return`
+    // ═══ DOCTOR: STUDENTS ═══
+    function buildDocStudents() {
+      const c = aC(); if (!c) return `<div class="card"><p style="color:var(--mu);padding:20px;text-align:center">لا توجد مقررات</p></div>`;
+      const studs = courseStudents(c.id);
+      return `
   ${cSel('selStudents')}
   <div class="card">
-    <div class="ch">👥 طلاب ${c.name}
+    <div class="ch">👥 طلاب ${c.name} (${studs.length})
       <button class="btn btn-gh" style="margin-right:auto;font-size:11px" onclick="openManage('${c.id}')">⚙️ إدارة</button>
     </div>
     <div style="overflow-x:auto">
     <table class="tbl">
-      <thead><tr><th>#</th><th>الطالب</th><th>Quizzes</th><th>HW</th><th>Mid</th><th>Project</th><th>Total</th><th>Grade</th><th>Rank</th><th>Status</th><th>عرض</th></tr></thead>
-      <tbody>${(()=>{
-        const rows=studs.map(s=>{
-          const tot=calcTotal(c.id,s.id);const gr=getGr(tot);const w=getWarnings(c.id,s.id);
-          return{s,tot,gr,w,qw:calcSection(c.id,s.id,'quiz'),hw:calcSection(c.id,s.id,'hw'),mw:calcSection(c.id,s.id,'mid'),pw:calcSection(c.id,s.id,'proj')};
-        }).sort((a,b)=>b.tot-a.tot);
-        return rows.map(({s,tot,gr,w,qw,hw,mw,pw},i)=>`<tr>
-          <td style="color:var(--mu);font-size:11px">${i+1}</td>
+      <thead><tr><th>#</th><th>الطالب</th><th>CE Quizzes</th><th>HW</th><th>Mid</th><th>Project</th><th>Total</th><th>Grade</th><th>Rank</th><th>Status</th><th>عرض</th></tr></thead>
+      <tbody>${(() => {
+          const rows = studs.map(s => {
+            const tot = calcTotal(c.id, s.id); const gr = getGr(tot); const w = getWarnings(c.id, s.id);
+            return { s, tot, gr, w, qw: calcSection(c.id, s.id, 'quiz'), hw: calcSection(c.id, s.id, 'hw'), mw: calcSection(c.id, s.id, 'mid'), pw: calcSection(c.id, s.id, 'proj') };
+          }).sort((a, b) => b.tot - a.tot);
+          return rows.map(({ s, tot, gr, w, qw, hw, mw, pw }, i) => `<tr>
+          <td style="color:var(--mu);font-size:11px">${i + 1}</td>
           <td><b>${s.name}</b><div style="font-size:10px;color:var(--mu)">${s.id}</div></td>
           <td style="color:var(--cy);font-weight:700">${qw}</td>
           <td style="color:var(--gr);font-weight:700">${hw}</td>
@@ -991,40 +1553,40 @@ function buildDocStudents(){
           <td style="color:var(--pu);font-weight:700">${pw}</td>
           <td><b style="color:var(--pri)">${tot}</b></td>
           <td><span class="badge ${gr.cls}">${gr.g}</span></td>
-          <td style="color:var(--mu)">#${i+1}</td>
-          <td>${w.length?`<span style="color:var(--re);font-size:10px;font-weight:700">⚠️</span>`:'<span style="color:var(--gr);font-size:10px">✅</span>'}</td>
+          <td style="color:var(--mu)">#${i + 1}</td>
+          <td>${w.length ? `<span style="color:var(--re);font-size:10px;font-weight:700">⚠️</span>` : '<span style="color:var(--gr);font-size:10px">✅</span>'}</td>
           <td><button class="btn-xs bx-a" onclick="viewStudent('${c.id}','${s.id}')">عرض</button></td>
         </tr>`).join('');
-      })()}
+        })()}
       </tbody>
     </table>
     </div>
   </div>`;
-}
-function selStudents(cid){activeC=cid;goTab('students');}
+    }
+    function selStudents(cid) { activeC = cid; goTab('students'); }
 
-function viewStudent(cid,sid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return;
-  const s=DB.users.find(u=>u.id===sid);if(!s)return;
-  const g=getG(cid,sid);const sc=c.schema;
-  const tot=calcTotal(cid,sid);const gr=getGr(tot);const w=getWarnings(cid,sid);
-  const studs=courseStudents(cid);
-  const scores=studs.map(u=>calcTotal(cid,u.id)).sort((a,b)=>b-a);
-  const rank=scores.indexOf(tot)+1;
-  const st=normalStats(scores);
-  const pos=tot>st.mean+5?'Above Average 🟢':tot<st.mean-5?'Below Average 🔴':'At Average 🟡';
-  const comment=c.comments?.[sid]||'';
-  setBc([{lb:'الطلاب',fn:"goTab('students')"},{lb:s.name}]);
-  document.getElementById('MN').innerHTML=`
+    function viewStudent(cid, sid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return;
+      const s = DB.users.find(u => u.id === sid); if (!s) return;
+      const g = getG(cid, sid); const sc = c.schema;
+      const tot = calcTotal(cid, sid); const gr = getGr(tot); const w = getWarnings(cid, sid);
+      const studs = courseStudents(cid);
+      const scores = studs.map(u => calcTotal(cid, u.id)).sort((a, b) => b - a);
+      const rank = scores.indexOf(tot) + 1;
+      const st = normalStats(scores);
+      const pos = tot > st.mean + 5 ? 'Above Average 🟢' : tot < st.mean - 5 ? 'Below Average 🔴' : 'At Average 🟡';
+      const comment = c.comments?.[sid] || '';
+      setBc([{ lb: 'الطلاب', fn: "goTab('students')" }, { lb: s.name }]);
+      document.getElementById('MN').innerHTML = `
   <div class="stud-header">
     <div class="flex ai-c jb">
       <div class="flex ai-c gap12">
         <div style="width:56px;height:56px;border-radius:50%;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid var(--pri)">
-          ${s.avatar?`<img src="${s.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:s.name.charAt(0)}
+          ${s.avatar ? `<img src="${s.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : s.name.charAt(0)}
         </div>
         <div>
           <div style="font-size:18px;font-weight:900;font-family:Cairo,sans-serif;color:var(--tx)">${s.name}</div>
-          <div style="font-size:12px;color:var(--mu)">${s.id} • ${s.major||'—'}</div>
+          <div style="font-size:12px;color:var(--mu)">${s.id} • ${s.major || '—'}</div>
         </div>
       </div>
       <div class="flex gap8">
@@ -1038,34 +1600,34 @@ function viewStudent(cid,sid){
       <div class="card mb12">
         <div class="ch">📊 تفاصيل الدرجات</div>
         <div class="g4" style="margin-bottom:12px">
-          <div class="stat s-c"><div class="sv">${calcSection(cid,sid,'quiz')}</div><div class="sl">Quizzes</div></div>
-          <div class="stat s-g"><div class="sv">${calcSection(cid,sid,'hw')}</div><div class="sl">HW</div></div>
-          <div class="stat s-o"><div class="sv">${calcSection(cid,sid,'mid')}</div><div class="sl">Mid</div></div>
-          <div class="stat s-p"><div class="sv">${calcSection(cid,sid,'proj')}</div><div class="sl">Project</div></div>
+          <div class="stat s-c"><div class="sv">${calcSection(cid, sid, 'quiz')}</div><div class="sl">CE Quizzes</div></div>
+          <div class="stat s-g"><div class="sv">${calcSection(cid, sid, 'hw')}</div><div class="sl">HW</div></div>
+          <div class="stat s-o"><div class="sv">${calcSection(cid, sid, 'mid')}</div><div class="sl">Mid</div></div>
+          <div class="stat s-p"><div class="sv">${calcSection(cid, sid, 'proj')}</div><div class="sl">Project</div></div>
         </div>
         <div style="background:var(--sf);border-radius:9px;padding:12px;border:1px solid var(--bd)">
-          <div style="font-size:12px;font-weight:700;margin-bottom:8px">Quizzes (${g.quizzes?.filter(v=>v!=null).length||0}/${qMaxes(sc).length})</div>
+          <div style="font-size:12px;font-weight:700;margin-bottom:8px">CE Quizzes</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
-            ${qMaxes(sc).map((mx,i)=>{
-              const v=g.quizzes?.[i];const atRisk=v!=null&&v<mx*0.5;
-              return`<div style="text-align:center;background:${atRisk?'var(--rl)':v!=null?'var(--gl)':'var(--card)'};border-radius:7px;padding:7px 10px;min-width:44px;border:1px solid ${atRisk?'var(--re)':v!=null?'var(--gr)':'var(--bd)'}">
-                <div style="font-size:15px;font-weight:900;font-family:Cairo,sans-serif;color:${atRisk?'var(--re)':v!=null?'var(--gr)':'var(--mu)'}">${v??'—'}</div>
-                <div style="font-size:9px;color:var(--mu)">Q${i+1}/${mx}</div>
+            ${qMaxes(sc).map((mx, i) => {
+        const v = g.quizzes?.[i]; const atRisk = v != null && v < mx * 0.5;
+        return `<div style="text-align:center;background:${atRisk ? 'var(--rl)' : v != null ? 'var(--gl)' : 'var(--card)'};border-radius:7px;padding:7px 10px;min-width:44px;border:1px solid ${atRisk ? 'var(--re)' : v != null ? 'var(--gr)' : 'var(--bd)'}">
+                <div style="font-size:15px;font-weight:900;font-family:Cairo,sans-serif;color:${atRisk ? 'var(--re)' : v != null ? 'var(--gr)' : 'var(--mu)'}">${v != null ? v : '—'}</div>
+                <div style="font-size:9px;color:var(--mu)">CE${i + 1}/${mx}</div>
               </div>`;
-            }).join('')}
+      }).join('')}
           </div>
-          <div style="font-size:12px;font-weight:700;margin-top:10px;margin-bottom:8px">HW (${g.hws?.filter(v=>v!=null).length||0}/${hMaxes(sc).length})</div>
+          <div style="font-size:12px;font-weight:700;margin-top:10px;margin-bottom:8px">HW</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
-            ${hMaxes(sc).map((mx,i)=>{
-              const v=g.hws?.[i];const atRisk=v!=null&&v<mx*0.5;
-              return`<div style="text-align:center;background:${atRisk?'var(--rl)':v!=null?'var(--gl)':'var(--card)'};border-radius:7px;padding:7px 10px;min-width:44px;border:1px solid ${atRisk?'var(--re)':v!=null?'var(--gr)':'var(--bd)'}">
-                <div style="font-size:15px;font-weight:900;font-family:Cairo,sans-serif;color:${atRisk?'var(--re)':v!=null?'var(--gr)':'var(--mu)'}">${v??'—'}</div>
-                <div style="font-size:9px;color:var(--mu)">HW${i+1}/${mx}</div>
+            ${hMaxes(sc).map((mx, i) => {
+        const v = g.hws?.[i]; const atRisk = v != null && v < mx * 0.5;
+        return `<div style="text-align:center;background:${atRisk ? 'var(--rl)' : v != null ? 'var(--gl)' : 'var(--card)'};border-radius:7px;padding:7px 10px;min-width:44px;border:1px solid ${atRisk ? 'var(--re)' : v != null ? 'var(--gr)' : 'var(--bd)'}">
+                <div style="font-size:15px;font-weight:900;font-family:Cairo,sans-serif;color:${atRisk ? 'var(--re)' : v != null ? 'var(--gr)' : 'var(--mu)'}">${v != null ? v : '—'}</div>
+                <div style="font-size:9px;color:var(--mu)">HW${i + 1}/${mx}</div>
               </div>`;
-            }).join('')}
+      }).join('')}
           </div>
         </div>
-        ${w.length?`<div class="al al-d mt12">⚠️<div><b>Early Warning!</b><br>${w.join(' | ')}</div></div>`:''}
+        ${w.length ? `<div class="al al-d mt12">⚠️<div><b>Early Warning!</b><br>${w.join(' | ')}</div></div>` : ''}
       </div>
       <div class="card">
         <div class="ch">💬 تعليق الدكتور</div>
@@ -1087,7 +1649,7 @@ function viewStudent(cid,sid){
             <div style="font-size:10px;color:var(--mu)">المجموع</div>
           </div>
           <div style="background:var(--sf);border-radius:9px;padding:12px;text-align:center;border:1px solid var(--bd)">
-            <div style="font-size:13px;font-weight:700;color:${tot>st.mean+5?'var(--gr)':tot<st.mean-5?'var(--re)':'var(--or)'};margin-top:8px">${pos}</div>
+            <div style="font-size:13px;font-weight:700;color:${tot > st.mean + 5 ? 'var(--gr)' : tot < st.mean - 5 ? 'var(--re)' : 'var(--or)'};margin-top:8px">${pos}</div>
             <div style="font-size:10px;color:var(--mu);margin-top:2px">Mean: ${st.mean}</div>
           </div>
         </div>
@@ -1104,159 +1666,183 @@ function viewStudent(cid,sid){
       </div>
     </div>
   </div>`;
-  // Draw mini performance chart
-  setTimeout(()=>{
-    const canvas=document.getElementById('perfChart');if(!canvas)return;
-    const W=canvas.offsetWidth||300;canvas.width=W;canvas.height=140;
-    const ctx=canvas.getContext('2d');
-    const quizScores=(g.quizzes||[]).filter(v=>v!=null).map(v=>Math.round(v/(qMaxes(sc)[0]||20)*100));
-    const hwScores=(g.hws||[]).filter(v=>v!=null).map(v=>Math.round(v/(hMaxes(sc)[0]||20)*100));
-    const allScores=[...quizScores,...hwScores,g.mid!=null?Math.round(g.mid/sc.midMax*100):null,g.proj!=null?Math.round(g.proj/sc.projMax*100):null].filter(v=>v!=null);
-    if(!allScores.length){ctx.fillStyle='#8b949e';ctx.font='11px Tajawal';ctx.textAlign='center';ctx.fillText('لا توجد درجات بعد',W/2,70);return;}
-    const labels=[...quizScores.map((_,i)=>`Q${i+1}`),...hwScores.map((_,i)=>`HW${i+1}`),g.mid!=null?'Mid':null,g.proj!=null?'Proj':null].filter(v=>v!=null);
-    const n=allScores.length;const bw=(W-20)/n;const maxH=110;
-    ctx.fillStyle='rgba(88,166,255,.06)';ctx.fillRect(10,10,W-20,maxH);
-    allScores.forEach((v,i)=>{
-      const x=10+i*bw+bw*.1;const h=(v/100)*maxH;const y=10+maxH-h;
-      const col=v>=80?'#3fb950':v>=60?'#d29922':'#f85149';
-      ctx.fillStyle=col+'44';ctx.fillRect(x,y,bw*.8,h);
-      ctx.fillStyle=col;ctx.fillRect(x,y,bw*.8,3);
-      ctx.fillStyle='#8b949e';ctx.font='9px Tajawal';ctx.textAlign='center';
-      ctx.fillText(labels[i],x+bw*.4,130);
-      ctx.fillStyle='#e6edf3';ctx.font='bold 10px Cairo';
-      ctx.fillText(v+'%',x+bw*.4,y-3);
-    });
-  },80);
-}
+      setTimeout(() => {
+        const canvas = document.getElementById('perfChart'); if (!canvas) return;
+        const W = canvas.offsetWidth || 300; canvas.width = W; canvas.height = 140;
+        const ctx = canvas.getContext('2d');
+        const quizScores = (g.quizzes || []).filter(v => v != null).map((v, i) => Math.round(v / (qMaxes(sc)[i] || 5) * 100));
+        const hwScores = (g.hws || []).filter(v => v != null).map((v, i) => Math.round(v / (hMaxes(sc)[i] || 20) * 100));
+        const allScores = [...quizScores, ...hwScores,
+          g.mid != null ? Math.round(g.mid / sc.midMax * 100) : null,
+          g.proj != null ? Math.round(g.proj / sc.projMax * 100) : null
+        ].filter(v => v != null);
+        if (!allScores.length) { ctx.fillStyle = '#8b949e'; ctx.font = '11px Tajawal'; ctx.textAlign = 'center'; ctx.fillText('لا توجد درجات بعد', W / 2, 70); return; }
+        const labels = [
+          ...quizScores.map((_, i) => `CE${i + 1}`),
+          ...hwScores.map((_, i) => `HW${i + 1}`),
+          g.mid != null ? 'Mid' : null,
+          g.proj != null ? 'Proj' : null
+        ].filter(v => v != null);
+        const n = allScores.length; const bw = (W - 20) / n; const maxH = 110;
+        ctx.fillStyle = 'rgba(88,166,255,.06)'; ctx.fillRect(10, 10, W - 20, maxH);
+        allScores.forEach((v, i) => {
+          const x = 10 + i * bw + bw * .1; const h = (v / 100) * maxH; const y = 10 + maxH - h;
+          const col = v >= 80 ? '#3fb950' : v >= 60 ? '#d29922' : '#f85149';
+          ctx.fillStyle = col + '44'; ctx.fillRect(x, y, bw * .8, h);
+          ctx.fillStyle = col; ctx.fillRect(x, y, bw * .8, 3);
+          ctx.fillStyle = '#8b949e'; ctx.font = '9px Tajawal'; ctx.textAlign = 'center';
+          ctx.fillText(labels[i], x + bw * .4, 130);
+          ctx.fillStyle = '#e6edf3'; ctx.font = 'bold 10px Cairo';
+          ctx.fillText(v + '%', x + bw * .4, y - 3);
+        });
+      }, 80);
+    }
 
-function saveComment(cid,sid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return;
-  if(!c.comments)c.comments={};
-  c.comments[sid]=document.getElementById('commentTA')?.value||'';
-  const btn=document.querySelector(`button[onclick="saveComment('${cid}','${sid}')"]`);
-  if(btn){btn.textContent='✅ تم!';setTimeout(()=>btn.textContent='💾 حفظ التعليق',2000);}
-}
+    function saveComment(cid, sid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return;
+      if (!c.comments) c.comments = {};
+      c.comments[sid] = document.getElementById('commentTA')?.value || '';
+      const btn = document.querySelector(`button[onclick="saveComment('${cid}','${sid}')"]`);
+      if (btn) { btn.textContent = '✅ تم!'; setTimeout(() => btn.textContent = '💾 حفظ التعليق', 2000); }
+    }
 
-function openManage(cid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return;
-  const enrolled=courseStudents(cid);
-  const notEnrolled=DB.users.filter(u=>u.role==='student'&&!u.courses.includes(cid));
-  setBc([{lb:'الطلاب',fn:"goTab('students')"},{lb:'إدارة'}]);
-  document.getElementById('MN').innerHTML=`
+    function openManage(cid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return;
+      const enrolled = courseStudents(cid);
+      const notEnrolled = DB.users.filter(u => u.role === 'student' && !u.courses.includes(cid));
+      setBc([{ lb: 'الطلاب', fn: "goTab('students')" }, { lb: 'إدارة' }]);
+      document.getElementById('MN').innerHTML = `
   <div class="card">
     <div class="ch">⚙️ إدارة طلاب — ${c.name}</div>
     <div class="g2">
       <div>
         <div style="font-weight:700;font-size:12px;color:var(--gr);margin-bottom:8px">✅ مسجلون (${enrolled.length})</div>
-        ${enrolled.map(s=>`<div class="flex ai-c jb" style="padding:8px;background:var(--sf);border-radius:8px;margin-bottom:6px;border:1px solid var(--bd)">
+        ${enrolled.map(s => `<div class="flex ai-c jb" style="padding:8px;background:var(--sf);border-radius:8px;margin-bottom:6px;border:1px solid var(--bd)">
           <div><b>${s.name}</b><div style="font-size:10px;color:var(--mu)">${s.id}</div></div>
           <div class="flex gap8">
             <button class="btn-xs bx-a" onclick="viewStudent('${cid}','${s.id}')">عرض</button>
             <button class="btn-xs bx-r" onclick="removeStud('${cid}','${s.id}')">إزالة</button>
           </div>
-        </div>`).join('')||'<p style="color:var(--mu);font-size:12px">لا يوجد</p>'}
+        </div>`).join('') || '<p style="color:var(--mu);font-size:12px">لا يوجد</p>'}
       </div>
       <div>
         <div style="font-weight:700;font-size:12px;color:var(--pri);margin-bottom:8px">➕ إضافة</div>
-        ${notEnrolled.map(s=>`<div class="flex ai-c jb" style="padding:8px;background:var(--sf);border-radius:8px;margin-bottom:6px;border:1px solid var(--bd)">
+        ${notEnrolled.map(s => `<div class="flex ai-c jb" style="padding:8px;background:var(--sf);border-radius:8px;margin-bottom:6px;border:1px solid var(--bd)">
           <div><b>${s.name}</b><div style="font-size:10px;color:var(--mu)">${s.id}</div></div>
           <button class="btn-xs bx-a" onclick="addStud('${cid}','${s.id}')">إضافة</button>
-        </div>`).join('')||'<p style="color:var(--mu);font-size:12px">لا يوجد</p>'}
+        </div>`).join('') || '<p style="color:var(--mu);font-size:12px">لا يوجد</p>'}
       </div>
     </div>
     <button class="btn btn-gh mt12" onclick="goTab('students')">← عودة</button>
   </div>`;
-}
+    }
 
-function addStud(cid,sid){
-  const s=DB.users.find(u=>u.id===sid);const c=DB.courses.find(c=>c.id===cid);
-  if(s&&!s.courses.includes(cid)){
-    s.courses.push(cid);
-    if(c&&!c.grades[sid]){const sc=c.schema;c.grades[sid]={quizzes:Array(qMaxes(sc).length).fill(null),hws:Array(hMaxes(sc).length).fill(null),mid:null,proj:null};}
-  }
-  openManage(cid);
-}
-function removeStud(cid,sid){
-  const s=DB.users.find(u=>u.id===sid);const c=DB.courses.find(c=>c.id===cid);
-  if(s)s.courses=s.courses.filter(x=>x!==cid);
-  if(c)delete c.grades[sid];
-  openManage(cid);
-}
+    function addStud(cid, sid) {
+      const s = DB.users.find(u => u.id === sid); const c = DB.courses.find(c => c.id === cid);
+      if (s && !s.courses.includes(cid)) {
+        s.courses.push(cid);
+        if (c && !c.grades[sid]) { const sc = c.schema; c.grades[sid] = { quizzes: Array(qMaxes(sc).length).fill(null), hws: Array(hMaxes(sc).length).fill(null), mid: null, proj: null }; }
+      }
+      openManage(cid);
+    }
+    function removeStud(cid, sid) {
+      const s = DB.users.find(u => u.id === sid); const c = DB.courses.find(c => c.id === cid);
+      if (s) s.courses = s.courses.filter(x => x !== cid);
+      if (c) delete c.grades[sid];
+      openManage(cid);
+    }
 
-// ═══ ALERTS ═══
-function getSmartAlerts(){
-  if(CU.role!=='doctor')return[];
-  const alerts=[];
-  myCourses().forEach(c=>{
-    courseStudents(c.id).forEach(s=>{
-      const tot=calcTotal(c.id,s.id);const gr=getGr(tot);const g=getG(c.id,s.id);const w=getWarnings(c.id,s.id);
-      if(gr.g==='F'||gr.g==='D')alerts.push({type:'fail',name:s.name,id:s.id,detail:`${c.name} — Total: ${tot}/100`});
-      if(w.length)alerts.push({type:'warn',name:s.name,id:s.id,detail:`${c.name} — ${w.slice(0,2).join(', ')}`});
-      const qs=g.quizzes?.filter(v=>v!=null)||[];
-      if(qs.length>=2&&qs[qs.length-2]>0&&(qs[qs.length-2]-qs[qs.length-1])/qs[qs.length-2]>0.25)
-        alerts.push({type:'drop',name:s.name,id:s.id,detail:`${c.name} — Q${qs.length-1}:${qs[qs.length-2]} → Q${qs.length}:${qs[qs.length-1]}`});
-    });
-  });
-  return alerts;
-}
+    // ═══ ALERTS ═══
+    function getSmartAlerts() {
+      if (CU.role !== 'doctor') return [];
+      const alerts = [];
+      myCourses().forEach(c => {
+        courseStudents(c.id).forEach(s => {
+          const tot = calcTotal(c.id, s.id); const gr = getGr(tot); const g = getG(c.id, s.id); const w = getWarnings(c.id, s.id);
+          if (gr.g === 'F' || gr.g === 'D') alerts.push({ type: 'fail', name: s.name, id: s.id, detail: `${c.name} — Total: ${tot}/100` });
+          if (w.length) alerts.push({ type: 'warn', name: s.name, id: s.id, detail: `${c.name} — ${w.slice(0, 2).join(', ')}` });
+          const qs = g.quizzes?.filter(v => v != null) || [];
+          if (qs.length >= 2 && qs[qs.length - 2] > 0 && (qs[qs.length - 2] - qs[qs.length - 1]) / qs[qs.length - 2] > 0.25)
+            alerts.push({ type: 'drop', name: s.name, id: s.id, detail: `${c.name} — CE${qs.length - 1}:${qs[qs.length - 2]} → CE${qs.length}:${qs[qs.length - 1]}` });
+        });
+      });
+      return alerts;
+    }
 
-function buildAlerts(){
-  const alerts=getSmartAlerts();
-  const m={fail:['al-d','🚨','خطر الرسوب'],drop:['al-w','📉','انخفاض'],warn:['al-w','⚠️','تحذير مبكر']};
-  return`<div class="card"><div class="ch">⚡ التنبيهات الذكية</div>
-    ${!alerts.length?'<p style="text-align:center;color:var(--mu);padding:24px">لا توجد تنبيهات 🎉</p>':
-      alerts.map(a=>{const[cls,ic,lb]=m[a.type]||['al-w','⚠️',''];
-        return`<div class="al ${cls}">${ic}<div><b>${a.name}</b> — ${lb}<br><small>${a.detail}</small></div></div>`;
-      }).join('')}
+    function buildAlerts() {
+      const alerts = getSmartAlerts();
+      const m = { fail: ['al-d', '🚨', 'خطر الرسوب'], drop: ['al-w', '📉', 'انخفاض'], warn: ['al-w', '⚠️', 'تحذير مبكر'] };
+      return `<div class="card"><div class="ch">⚡ التنبيهات الذكية</div>
+    ${!alerts.length ? '<p style="text-align:center;color:var(--mu);padding:24px">لا توجد تنبيهات 🎉</p>' :
+          alerts.map(a => {
+            const [cls, ic, lb] = m[a.type] || ['al-w', '⚠️', ''];
+            return `<div class="al ${cls}">${ic}<div><b>${a.name}</b> — ${lb}<br><small>${a.detail}</small></div></div>`;
+          }).join('')}
   </div>`;
-}
+    }
 
-function buildReport(){
-  return`<div class="card">
+    function buildReport() {
+      return `<div class="card">
     <div class="flex ai-c jb mb12">
       <div class="ch" style="margin:0">📋 التقرير الأكاديمي</div>
       <button class="btn btn-g" onclick="window.print()">🖨️ طباعة</button>
     </div>
-    ${myCourses().map(c=>{
-      const studs=courseStudents(c.id);
-      const scores=studs.map(s=>calcTotal(c.id,s.id));
-      const st=normalStats(scores);
-      const pass=scores.filter(s=>s>=60).length;
-      const gc={};GRADES.forEach(g=>gc[g.g]=0);studs.forEach(s=>gc[getGr(calcTotal(c.id,s.id)).g]++);
-      return`<div style="background:var(--sf);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid var(--bd)">
-        <div style="font-weight:700;margin-bottom:10px">${c.name} (${c.id})</div>
+    ${myCourses().map(c => {
+        const studs = courseStudents(c.id);
+        const scores = studs.map(s => calcTotal(c.id, s.id));
+        const st = normalStats(scores);
+        const pass = scores.filter(s => s >= 60).length;
+        const gc = {}; GRADES.forEach(g => gc[g.g] = 0); studs.forEach(s => gc[getGr(calcTotal(c.id, s.id)).g]++);
+        return `<div style="background:var(--sf);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid var(--bd)">
+        <div style="font-weight:700;margin-bottom:10px">${c.name} (${c.id}) — ${studs.length} طالب</div>
         <div class="g4">
           <div class="stat s-b"><div class="sv">${studs.length}</div><div class="sl">طلاب</div></div>
           <div class="stat s-g"><div class="sv">${pass}</div><div class="sl">ناجح</div></div>
-          <div class="stat s-r"><div class="sv">${studs.length-pass}</div><div class="sl">راسب</div></div>
+          <div class="stat s-r"><div class="sv">${studs.length - pass}</div><div class="sl">راسب</div></div>
           <div class="stat s-b"><div class="sv">${st.mean}</div><div class="sl">Mean</div></div>
         </div>
         <canvas id="BC_${c.id}" height="130" style="margin-top:12px"></canvas>
         <div style="margin-top:10px;display:flex;gap:5px;flex-wrap:wrap">
-          ${GRADES.map(g=>`<span class="badge ${g.cls}">${g.g}: ${gc[g.g]}</span>`).join('')}
+          ${GRADES.map(g => `<span class="badge ${g.cls}">${g.g}: ${gc[g.g]}</span>`).join('')}
         </div>
-        <div style="margin-top:6px;font-size:12px;color:${st.shape.includes('🎉')?'var(--gr)':st.shape.includes('⚠️')?'var(--re)':'var(--pri)'};font-weight:700">${st.shape}</div>
+        <div style="margin-top:6px;font-size:12px;color:${st.shape.includes('🎉') ? 'var(--gr)' : st.shape.includes('⚠️') ? 'var(--re)' : 'var(--pri)'};font-weight:700">${st.shape}</div>
       </div>`;
-    }).join('')}
+      }).join('')}
   </div>`;
-}
+    }
 
-// ═══ STUDENT PAGES ═══
-function buildStudDash(){
-  const courses=myCourses();
-  if(!courses.length)return`<div class="card" style="text-align:center;padding:40px;color:var(--mu)">أنت غير مسجل في أي مقرر</div>`;
-  return`<div class="g2 mb12">${courses.map(c=>{
-    const tot=calcTotal(c.id,CU.id);const gr=getGr(tot);const doc=DB.users.find(u=>u.id===c.doctor);
-    const studs=courseStudents(c.id);
-    const scores=studs.map(s=>calcTotal(c.id,s.id)).sort((a,b)=>b-a);
-    const rank=scores.indexOf(tot)+1;const w=getWarnings(c.id,CU.id);
-    return`<div class="card" style="cursor:pointer;transition:.2s"
+    // ═══ STUDENT PAGES ═══
+    function buildStudDash() {
+      const courses = myCourses();
+      if (!courses.length) return `<div class="card" style="text-align:center;padding:40px;color:var(--mu)">أنت غير مسجل في أي مقرر</div>`;
+
+      // Build warning banners for F/D grades
+      const banners = courses.map(c => {
+        const tot = calcTotal(c.id, CU.id); const gr = getGr(tot);
+        const maxP = calcMaxPossible(c.id, CU.id);
+        if (gr.g === 'F')
+          return `<div class="al al-d" style="margin-bottom:10px;font-size:13px">
+            🚨 <div><b>تحذير: أنت في خطر الرسوب في ${c.name}!</b><br>
+            مجموعك الحالي <b>${tot}/100</b>. أقصى مجموع ممكن: <b>${maxP}</b>. تواصل مع الدكتور فوراً.</div></div>`;
+        if (gr.g === 'D')
+          return `<div class="al al-w" style="margin-bottom:10px;font-size:13px">
+            ⚠️ <div><b>مستوى منخفض في ${c.name}</b><br>
+            مجموعك <b>${tot}/100</b>. أنت بحاجة لتحسين أداءك قبل نهاية الفصل.</div></div>`;
+        return '';
+      }).join('');
+
+      return `${banners}<div class="g2 mb12">${courses.map(c => {
+        const tot = calcTotal(c.id, CU.id); const gr = getGr(tot); const doc = DB.users.find(u => u.id === c.doctor);
+        const studs = courseStudents(c.id);
+        const scores = studs.map(s => calcTotal(c.id, s.id)).sort((a, b) => b - a);
+        const rank = scores.indexOf(tot) + 1; const w = getWarnings(c.id, CU.id);
+        return `<div class="card" style="cursor:pointer;transition:.2s"
       onmouseover="this.style.borderColor='var(--pri)'" onmouseout="this.style.borderColor='var(--bd)'"
       onclick="openStudCourse('${c.id}')">
       <div class="flex ai-c jb mb12">
         <div>
           <div style="font-weight:700;font-size:14px">${c.name}</div>
-          <div style="font-size:11px;color:var(--mu)">${doc?doc.name:'—'}</div>
+          <div style="font-size:11px;color:var(--mu)">${doc ? doc.name : '—'}</div>
         </div>
         <span class="badge ${gr.cls}" style="font-size:13px;padding:4px 12px">${gr.g}</span>
       </div>
@@ -1270,105 +1856,96 @@ function buildStudDash(){
           <div style="font-size:10px;color:var(--mu)">الترتيب</div>
         </div>
         <div style="text-align:center;background:var(--sf);border-radius:8px;padding:9px;border:1px solid var(--bd)">
-          <div style="font-size:22px;font-weight:900;font-family:Cairo,sans-serif;color:var(--cy)">${calcSection(c.id,CU.id,'quiz')}</div>
-          <div style="font-size:10px;color:var(--mu)">Quizzes</div>
+          <div style="font-size:22px;font-weight:900;font-family:Cairo,sans-serif;color:var(--cy)">${calcSection(c.id, CU.id, 'quiz')}</div>
+          <div style="font-size:10px;color:var(--mu)">CE Quizzes</div>
         </div>
       </div>
       <div class="pw mt12"><div class="pb" style="width:${tot}%;background:${GC[gr.g]}"></div></div>
-      ${w.length?`<div style="margin-top:8px;font-size:11px;color:var(--re);font-weight:700">⚠️ تحذير مبكر — درجات منخفضة</div>`:''}
+      ${w.length ? `<div style="margin-top:8px;font-size:11px;color:var(--re);font-weight:700">⚠️ تحذير مبكر — درجات منخفضة</div>` : ''}
     </div>`;
-  }).join('')}</div>`;
-}
+      }).join('')}</div>`;
+    }
 
-function openStudCourse(cid){
-  activeC=cid;markTab('grades');
-  const c=DB.courses.find(c=>c.id===cid);
-  setBc([{lb:'مقرراتي',fn:"goTab('dash')"},{lb:c?.name||''}]);
-  document.getElementById('MN').innerHTML=buildStudGradesPage(cid);
-}
+    function openStudCourse(cid) {
+      activeC = cid; markTab('grades');
+      const c = DB.courses.find(c => c.id === cid);
+      setBc([{ lb: 'مقرراتي', fn: "goTab('dash')" }, { lb: c?.name || '' }]);
+      document.getElementById('MN').innerHTML = buildStudGradesPage(cid);
+    }
 
-function buildStudGradesPage(cid){
-  const courses=myCourses();
-  if(!courses.length)return`<div class="card"><p style="color:var(--mu);padding:20px;text-align:center">لا توجد مقررات</p></div>`;
-  const c=DB.courses.find(c=>c.id===(cid||activeC))||courses[0];
-  if(!c)return'';
-  const sc=c.schema;const g=getG(c.id,CU.id);
-  const doc=DB.users.find(u=>u.id===c.doctor);
-  const w=getWarnings(c.id,CU.id);
-  const studs=courseStudents(c.id);
-  const scores=studs.map(s=>calcTotal(c.id,s.id)).sort((a,b)=>b-a);
-  const tot=calcTotal(c.id,CU.id);const gr=getGr(tot);
-  const rank=scores.indexOf(tot)+1;
-  const st=normalStats(scores);
-  const comment=c.comments?.[CU.id]||'';
-  const courseSel=courses.length>1?`<div class="csel mb12">${courses.map(co=>`<button class="csb ${co.id===c.id?'on':''}" onclick="openStudCourse('${co.id}')">${co.name}</button>`).join('')}</div>`:'';
-  const activeTab2=window._studTab||'all';
+    function buildStudGradesPage(cid) {
+      const courses = myCourses();
+      if (!courses.length) return `<div class="card"><p style="color:var(--mu);padding:20px;text-align:center">لا توجد مقررات</p></div>`;
+      const c = DB.courses.find(c => c.id === (cid || activeC)) || courses[0];
+      if (!c) return '';
+      const sc = c.schema; const g = getG(c.id, CU.id);
+      const doc = DB.users.find(u => u.id === c.doctor);
+      const w = getWarnings(c.id, CU.id);
+      const studs = courseStudents(c.id);
+      const scores = studs.map(s => calcTotal(c.id, s.id)).sort((a, b) => b - a);
+      const tot = calcTotal(c.id, CU.id); const gr = getGr(tot);
+      const rank = scores.indexOf(tot) + 1;
+      const st = normalStats(scores);
+      const comment = c.comments?.[CU.id] || '';
+      const courseSel = courses.length > 1 ? `<div class="csel mb12">${courses.map(co => `<button class="csb ${co.id === c.id ? 'on' : ''}" onclick="openStudCourse('${co.id}')">${co.name}</button>`).join('')}</div>` : '';
+      const activeTab2 = window._studTab || 'all';
+      const qSec = calcSection(c.id, CU.id, 'quiz');
+      const hSec = calcSection(c.id, CU.id, 'hw');
+      const mSec = calcSection(c.id, CU.id, 'mid');
+      const pSec = calcSection(c.id, CU.id, 'proj');
 
-  // Calc sections
-  const qSec=calcSection(c.id,CU.id,'quiz');
-  const hSec=calcSection(c.id,CU.id,'hw');
-  const mSec=calcSection(c.id,CU.id,'mid');
-  const pSec=calcSection(c.id,CU.id,'proj');
+      // Max possible score (assuming perfect on all ungraded items)
+      const maxPoss = calcMaxPossible(c.id, CU.id);
 
-  return`
+      return `
   ${courseSel}
   <div class="g2">
     <div>
-      <!-- Score entry -->
       <div class="card mb12">
         <div class="ch">✏️ درجاتي — ${c.name}</div>
         <p style="font-size:11px;color:var(--mu);margin-bottom:12px">أدخل درجاتك. Mid وProject يدخلهم الدكتور.</p>
-        
-        <div style="font-weight:700;font-size:11px;color:var(--cy);margin-bottom:8px">📝 Quizzes (${qMaxes(sc).length}) — وزن ${sc.quizWeight}%</div>
+        <div style="font-weight:700;font-size:11px;color:var(--cy);margin-bottom:8px">📝 CE Quizzes (${qMaxes(sc).length}×${qMaxes(sc)[0]}) — وزن ${sc.quizWeight}%</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-bottom:12px">
-          ${qMaxes(sc).map((mx,i)=>{
-            const v=g.quizzes?.[i];const atRisk=v!=null&&v<mx*0.5;
-            return`<div style="background:var(--sf);border-radius:9px;padding:10px;text-align:center;border:1.5px solid ${atRisk?'var(--re)':'var(--bd)'}">
-              <label style="font-size:10px;color:var(--mu);display:block;margin-bottom:6px">Q${i+1}/${mx}</label>
-              <input class="sin" type="number" id="sq_${i}" value="${v??''}" min="0" max="${mx}"
-                oninput="updateStudLive('${c.id}')" style="width:54px">
-              ${atRisk?`<div style="font-size:9px;color:var(--re);margin-top:3px">⚠️ < ${Math.ceil(mx*0.5)}</div>`:''}
+          ${qMaxes(sc).map((mx, i) => {
+        const v = g.quizzes?.[i]; const atRisk = v != null && v < mx * 0.5;
+        return `<div style="background:var(--sf);border-radius:9px;padding:10px;text-align:center;border:1.5px solid ${atRisk ? 'var(--re)' : 'var(--bd)'}">
+              <label style="font-size:10px;color:var(--mu);display:block;margin-bottom:6px">CE${i + 1}/${mx}</label>
+              <input class="sin" type="number" id="sq_${i}" value="${v ?? ''}" min="0" max="${mx}" oninput="updateStudLive('${c.id}')" style="width:54px">
+              ${atRisk ? `<div style="font-size:9px;color:var(--re);margin-top:3px">⚠️ < ${Math.ceil(mx * 0.5)}</div>` : ''}
             </div>`;
-          }).join('')}
+      }).join('')}
         </div>
-
-        <div style="font-weight:700;font-size:11px;color:var(--gr);margin-bottom:8px">📚 Homeworks (${hMaxes(sc).length}) — وزن ${sc.hwWeight}%</div>
+        <div style="font-weight:700;font-size:11px;color:var(--gr);margin-bottom:8px">📚 HW (${hMaxes(sc).length}×${hMaxes(sc)[0]}) — وزن ${sc.hwWeight}%</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-bottom:12px">
-          ${hMaxes(sc).map((mx,i)=>{
-            const v=g.hws?.[i];const atRisk=v!=null&&v<mx*0.5;
-            return`<div style="background:var(--sf);border-radius:9px;padding:10px;text-align:center;border:1.5px solid ${atRisk?'var(--re)':'var(--bd)'}">
-              <label style="font-size:10px;color:var(--mu);display:block;margin-bottom:6px">HW${i+1}/${mx}</label>
-              <input class="sin" type="number" id="sh_${i}" value="${v??''}" min="0" max="${mx}"
-                oninput="updateStudLive('${c.id}')" style="width:54px">
-              ${atRisk?`<div style="font-size:9px;color:var(--re);margin-top:3px">⚠️ < ${Math.ceil(mx*0.5)}</div>`:''}
+          ${hMaxes(sc).map((mx, i) => {
+        const v = g.hws?.[i]; const atRisk = v != null && v < mx * 0.5;
+        return `<div style="background:var(--sf);border-radius:9px;padding:10px;text-align:center;border:1.5px solid ${atRisk ? 'var(--re)' : 'var(--bd)'}">
+              <label style="font-size:10px;color:var(--mu);display:block;margin-bottom:6px">HW${i + 1}/${mx}</label>
+              <input class="sin" type="number" id="sh_${i}" value="${v ?? ''}" min="0" max="${mx}" oninput="updateStudLive('${c.id}')" style="width:54px">
+              ${atRisk ? `<div style="font-size:9px;color:var(--re);margin-top:3px">⚠️ < ${Math.ceil(mx * 0.5)}</div>` : ''}
             </div>`;
-          }).join('')}
+      }).join('')}
         </div>
-
-        <!-- Read-only sections -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
           <div style="background:var(--sf);border-radius:9px;padding:10px;border:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center">
             <span style="font-size:11px;color:var(--mu)">🔒 Midterm /${sc.midMax}</span>
-            <span style="font-size:18px;font-weight:900;font-family:Cairo,sans-serif;color:var(--or)">${g.mid??'—'}</span>
+            <span style="font-size:18px;font-weight:900;font-family:Cairo,sans-serif;color:var(--or)">${g.mid ?? '—'}</span>
           </div>
           <div style="background:var(--sf);border-radius:9px;padding:10px;border:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center">
             <span style="font-size:11px;color:var(--mu)">🔒 Project /${sc.projMax}</span>
-            <span style="font-size:18px;font-weight:900;font-family:Cairo,sans-serif;color:var(--pu)">${g.proj??'—'}</span>
+            <span style="font-size:18px;font-weight:900;font-family:Cairo,sans-serif;color:var(--pu)">${g.proj ?? '—'}</span>
           </div>
         </div>
-
         <button class="bsave" onclick="saveStudGrades('${c.id}')">💾 حفظ ومتابعة</button>
-        ${w.length?`<div class="al al-d mt12">⚠️<div><b>Early Warning!</b><br>${w.join(' | ')}</div></div>`:''}
-        ${comment?`<div class="al al-b mt12">💬<div><b>تعليق الدكتور:</b><br>${comment}</div></div>`:''}
+        ${w.length ? `<div class="al al-d mt12">⚠️<div><b>Early Warning!</b><br>${w.join(' | ')}</div></div>` : ''}
+        ${comment ? `<div class="al al-b mt12">💬<div><b>تعليق الدكتور:</b><br>${comment}</div></div>` : ''}
       </div>
     </div>
-
     <div>
-      <!-- Total summary -->
       <div class="card mb12">
         <div class="ch">📊 ملخص درجاتي</div>
         <div class="g4" style="margin-bottom:12px">
-          <div class="stat s-c"><div class="sv" id="qStat">${qSec}</div><div class="sl">Quizzes</div></div>
+          <div class="stat s-c"><div class="sv" id="qStat">${qSec}</div><div class="sl">CE Quizzes</div></div>
           <div class="stat s-g"><div class="sv" id="hStat">${hSec}</div><div class="sl">HW</div></div>
           <div class="stat s-o"><div class="sv">${mSec}</div><div class="sl">Mid</div></div>
           <div class="stat s-p"><div class="sv">${pSec}</div><div class="sl">Project</div></div>
@@ -1382,161 +1959,160 @@ function buildStudGradesPage(cid){
         </div>
         <div style="margin-top:10px;display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
           <span>Rank: <b style="color:var(--pu)">#${rank}</b> من ${studs.length}</span>
-          <span>${tot>st.mean+5?'🟢 Above Avg':tot<st.mean-5?'🔴 Below Avg':'🟡 At Avg'}</span>
+          <span>${tot > st.mean + 5 ? '🟢 Above Avg' : tot < st.mean - 5 ? '🔴 Below Avg' : '🟡 At Avg'}</span>
         </div>
         <div class="pw"><div class="pb" id="totBar" style="width:${tot}%;background:${GC[gr.g]}"></div></div>
+        <div style="margin-top:8px;font-size:11px;color:var(--mu)">
+          أقصى مجموع ممكن: <b style="color:${maxPoss >= 90 ? 'var(--gr)' : maxPoss >= 60 ? 'var(--or)' : 'var(--re)'}">${maxPoss}</b>
+        </div>
       </div>
-
-      <!-- Section calculator -->
       <div class="card mb12">
         <div class="ch">🧮 حاسبة القسم</div>
-        <p style="font-size:11px;color:var(--mu);margin-bottom:12px">احسب أداءك في كل قسم بشكل منفصل</p>
         <div class="tabs">
-          <button class="tab ${activeTab2==='quiz'?'on':''}" onclick="switchStudTab('quiz','${c.id}')">Quizzes فقط</button>
-          <button class="tab ${activeTab2==='hw'?'on':''}" onclick="switchStudTab('hw','${c.id}')">HW فقط</button>
-          <button class="tab ${activeTab2==='all'?'on':''}" onclick="switchStudTab('all','${c.id}')">الكل</button>
+          <button class="tab ${activeTab2 === 'quiz' ? 'on' : ''}" onclick="switchStudTab('quiz','${c.id}')">CE فقط</button>
+          <button class="tab ${activeTab2 === 'hw' ? 'on' : ''}" onclick="switchStudTab('hw','${c.id}')">HW فقط</button>
+          <button class="tab ${activeTab2 === 'all' ? 'on' : ''}" onclick="switchStudTab('all','${c.id}')">الكل</button>
         </div>
-        <div id="calcResult">${buildCalcResult(c.id,activeTab2)}</div>
+        <div id="calcResult">${buildCalcResult(c.id, activeTab2)}</div>
       </div>
-
-      <!-- Grade Prediction -->
       <div class="card">
         <div class="ch">🎯 كم تحتاج للمستوى التالي؟</div>
-        <p style="font-size:11px;color:var(--mu);margin-bottom:12px">مجموعك الحالي: <b style="color:var(--pri)">${tot}</b> — الدرجات المطلوبة لكل تقدير:</p>
-        ${GRADES.map(grade=>{
-          const gap=Math.max(0,Math.ceil((grade.min-tot)*10)/10);
-          const achieved=tot>=grade.min;
-          const pct=Math.min(100,Math.round(tot/grade.min*100));
-          return`<div style="background:var(--sf);border-radius:10px;padding:11px;margin-bottom:8px;border:1.5px solid ${achieved?'var(--gr)':'var(--bd)'}">
+        <div style="font-size:11px;color:var(--mu);margin-bottom:12px">
+          مجموعك الحالي: <b style="color:var(--pri)">${tot}</b> &nbsp;|&nbsp;
+          أقصى ممكن: <b style="color:${maxPoss >= 90 ? 'var(--gr)' : 'var(--or)'}">${maxPoss}</b>
+        </div>
+        ${GRADES.map(grade => {
+        const gap = Math.max(0, Math.ceil((grade.min - tot) * 10) / 10);
+        const achieved = tot >= grade.min;
+        const unreachable = !achieved && maxPoss < grade.min;
+        const pct = Math.min(100, Math.round(tot / grade.min * 100));
+        return `<div style="background:var(--sf);border-radius:10px;padding:11px;margin-bottom:8px;border:1.5px solid ${achieved ? 'var(--gr)' : unreachable ? 'rgba(110,118,129,.25)' : 'var(--bd)'}${unreachable ? ';opacity:0.65' : ''}">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
               <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:15px;font-weight:900;font-family:Cairo,sans-serif;color:${GC[grade.g]}">${grade.g}</span>
+                <span style="font-size:15px;font-weight:900;font-family:Cairo,sans-serif;color:${unreachable ? 'var(--mu2)' : GC[grade.g]}">${grade.g}</span>
                 <span style="font-size:11px;color:var(--mu)">≥ ${grade.min}</span>
               </div>
               ${achieved
-                ?`<span style="font-size:12px;font-weight:700;color:var(--gr)">✅ محقق!</span>`
-                :`<div style="text-align:center">
+          ? `<span style="font-size:12px;font-weight:700;color:var(--gr)">✅ محقق!</span>`
+          : unreachable
+            ? `<span style="font-size:12px;font-weight:700;color:var(--mu2)">❌ لا يمكن الوصول</span>`
+            : `<div style="text-align:center">
                     <div style="font-size:20px;font-weight:900;font-family:Cairo,sans-serif;color:${GC[grade.g]}">+${gap}</div>
                     <div style="font-size:9px;color:var(--mu)">درجة فاضلة</div>
                   </div>`}
             </div>
             <div style="background:var(--bd);border-radius:20px;height:5px;overflow:hidden">
-              <div style="width:${achieved?100:pct}%;height:100%;border-radius:20px;background:${achieved?'var(--gr)':GC[grade.g]};transition:width .6s"></div>
+              <div style="width:${achieved ? 100 : unreachable ? Math.round(maxPoss / grade.min * 100) : pct}%;height:100%;border-radius:20px;background:${achieved ? 'var(--gr)' : unreachable ? 'var(--mu2)' : GC[grade.g]};transition:width .6s"></div>
             </div>
+            ${unreachable ? `<div style="font-size:10px;color:var(--mu2);margin-top:5px">حتى بأقصى درجة ممكنة (${maxPoss}) لا يكفي لـ ${grade.g}</div>` : ''}
           </div>`;
-        }).join('')}
+      }).join('')}
       </div>
     </div>
   </div>`;
-}
+    }
 
-function switchStudTab(t,cid){window._studTab=t;document.getElementById('calcResult').innerHTML=buildCalcResult(cid,t);}
+    function switchStudTab(t, cid) { window._studTab = t; document.getElementById('calcResult').innerHTML = buildCalcResult(cid, t); }
 
-function buildCalcResult(cid,t){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return'';
-  const sc=c.schema;const g=getG(cid,CU.id);
-  const qm=qMaxes(sc);const hm=hMaxes(sc);
-  if(t==='quiz'){
-    const scored=qm.map((mx,i)=>g.quizzes?.[i]!=null?{v:g.quizzes[i],max:mx}:null).filter(Boolean);
-    const weighted=calcSection(cid,CU.id,'quiz');
-    return`<div style="padding:12px">
-      <div style="font-size:11px;color:var(--mu);margin-bottom:10px;text-align:center">أداء كل اختبار على حدة</div>
-      ${qm.map((mx,i)=>{
-        const v=g.quizzes?.[i];const pct=v!=null?Math.round(v/mx*100):null;
-        const col=pct!=null?(pct>=80?'var(--gr)':pct>=50?'var(--or)':'var(--re)'):'var(--mu)';
-        return`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
-          <span style="font-weight:600">Q${i+1} <span style="color:var(--mu)">/${mx}</span></span>
-          <span style="font-weight:700;color:${col}">${v!=null?v+'  ('+pct+'%)':'لم تُدخل'}</span>
-        </div><div class="pw"><div class="pb" style="width:${pct??0}%;background:${col}"></div></div></div>`;
-      }).join('')}
+    function buildCalcResult(cid, t) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return '';
+      const sc = c.schema; const g = getG(cid, CU.id);
+      const qm = qMaxes(sc); const hm = hMaxes(sc);
+      if (t === 'quiz') {
+        const weighted = calcSection(cid, CU.id, 'quiz');
+        return `<div style="padding:12px">
+      ${qm.map((mx, i) => {
+          const v = g.quizzes?.[i]; const pct = v != null ? Math.round(v / mx * 100) : null;
+          const col = pct != null ? (pct >= 80 ? 'var(--gr)' : pct >= 50 ? 'var(--or)' : 'var(--re)') : 'var(--mu)';
+          return `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+          <span style="font-weight:600">CE${i + 1} <span style="color:var(--mu)">/${mx}</span></span>
+          <span style="font-weight:700;color:${col}">${v != null ? v + ' (' + pct + '%)' : 'لم تُدخل'}</span>
+        </div><div class="pw"><div class="pb" style="width:${pct ?? 0}%;background:${col}"></div></div></div>`;
+        }).join('')}
       <div style="margin-top:10px;padding:10px;background:var(--cyl);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
         <span style="font-weight:700">Weighted Total</span>
         <span style="font-size:18px;font-weight:900;font-family:Cairo,sans-serif;color:var(--cy)">${weighted}/${sc.quizWeight}</span>
-      </div>
-    </div>`;
-  } else if(t==='hw'){
-    const weighted=calcSection(cid,CU.id,'hw');
-    return`<div style="padding:12px">
-      <div style="font-size:11px;color:var(--mu);margin-bottom:10px;text-align:center">أداء كل واجب على حدة</div>
-      ${hm.map((mx,i)=>{
-        const v=g.hws?.[i];const pct=v!=null?Math.round(v/mx*100):null;
-        const col=pct!=null?(pct>=80?'var(--gr)':pct>=50?'var(--or)':'var(--re)'):'var(--mu)';
-        return`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
-          <span style="font-weight:600">HW${i+1} <span style="color:var(--mu)">/${mx}</span></span>
-          <span style="font-weight:700;color:${col}">${v!=null?v+'  ('+pct+'%)':'لم تُدخل'}</span>
-        </div><div class="pw"><div class="pb" style="width:${pct??0}%;background:${col}"></div></div></div>`;
-      }).join('')}
+      </div></div>`;
+      } else if (t === 'hw') {
+        const weighted = calcSection(cid, CU.id, 'hw');
+        return `<div style="padding:12px">
+      ${hm.map((mx, i) => {
+          const v = g.hws?.[i]; const pct = v != null ? Math.round(v / mx * 100) : null;
+          const col = pct != null ? (pct >= 80 ? 'var(--gr)' : pct >= 50 ? 'var(--or)' : 'var(--re)') : 'var(--mu)';
+          return `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+          <span style="font-weight:600">HW${i + 1} <span style="color:var(--mu)">/${mx}</span></span>
+          <span style="font-weight:700;color:${col}">${v != null ? v + ' (' + pct + '%)' : 'لم تُدخل'}</span>
+        </div><div class="pw"><div class="pb" style="width:${pct ?? 0}%;background:${col}"></div></div></div>`;
+        }).join('')}
       <div style="margin-top:10px;padding:10px;background:var(--gl);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
         <span style="font-weight:700">Weighted Total</span>
         <span style="font-size:18px;font-weight:900;font-family:Cairo,sans-serif;color:var(--gr)">${weighted}/${sc.hwWeight}</span>
-      </div>
-    </div>`;
-  } else {
-    const tot=calcTotal(cid,CU.id);const gr=getGr(tot);
-    const qw=calcSection(cid,CU.id,'quiz'),hw=calcSection(cid,CU.id,'hw'),mw=calcSection(cid,CU.id,'mid'),pw=calcSection(cid,CU.id,'proj');
-    return`<div style="padding:12px">
-      ${[{lb:'Quizzes',v:qw,max:sc.quizWeight,col:'var(--cy)'},{lb:'HW',v:hw,max:sc.hwWeight,col:'var(--gr)'},{lb:'Mid',v:mw,max:sc.midWeight,col:'var(--or)'},{lb:'Project',v:pw,max:sc.projWeight,col:'var(--pu)'}].map(it=>`
-      <div style="margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
-          <span style="font-weight:600">${it.lb}</span>
-          <span style="font-weight:700;color:${it.col}">${it.v}/${it.max}</span>
-        </div>
-        <div class="pw"><div class="pb" style="width:${it.max>0?Math.round(it.v/it.max*100):0}%;background:${it.col}"></div></div>
-      </div>`).join('')}
+      </div></div>`;
+      } else {
+        const tot = calcTotal(cid, CU.id); const gr = getGr(tot);
+        const qw = calcSection(cid, CU.id, 'quiz'), hw = calcSection(cid, CU.id, 'hw'),
+          mw = calcSection(cid, CU.id, 'mid'), pw = calcSection(cid, CU.id, 'proj');
+        return `<div style="padding:12px">
+      ${[{ lb: 'CE Quizzes', v: qw, max: sc.quizWeight, col: 'var(--cy)' },
+            { lb: 'HW', v: hw, max: sc.hwWeight, col: 'var(--gr)' },
+            { lb: 'Mid', v: mw, max: sc.midWeight, col: 'var(--or)' },
+            { lb: 'Project', v: pw, max: sc.projWeight, col: 'var(--pu)' }
+          ].map(it =>
+            `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+          <span style="font-weight:600">${it.lb}</span><span style="font-weight:700;color:${it.col}">${it.v}/${it.max}</span>
+        </div><div class="pw"><div class="pb" style="width:${it.max > 0 ? Math.round(it.v / it.max * 100) : 0}%;background:${it.col}"></div></div></div>`).join('')}
       <div style="margin-top:10px;padding:10px;background:var(--pl);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
         <span style="font-weight:700">Total</span>
         <div><span style="font-size:22px;font-weight:900;font-family:Cairo,sans-serif;color:${GC[gr.g]}">${tot}</span>
           <span class="badge ${gr.cls}" style="margin-right:6px">${gr.g}</span></div>
-      </div>
-    </div>`;
-  }
-}
+      </div></div>`;
+      }
+    }
 
-function updateStudLive(cid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return;
-  const sc=c.schema;
-  if(!c.grades[CU.id])c.grades[CU.id]={quizzes:Array(qMaxes(sc).length).fill(null),hws:Array(hMaxes(sc).length).fill(null),mid:null,proj:null};
-  c.grades[CU.id].quizzes=Array.from({length:qMaxes(sc).length},(_,i)=>{const v=document.getElementById(`sq_${i}`)?.value;return v===''?null:+v;});
-  c.grades[CU.id].hws=Array.from({length:hMaxes(sc).length},(_,i)=>{const v=document.getElementById(`sh_${i}`)?.value;return v===''?null:+v;});
-  const tot=calcTotal(cid,CU.id);const gr=getGr(tot);
-  const ts=document.getElementById('totStat');const gs=document.getElementById('grStat');
-  const tb=document.getElementById('totBar');const qs=document.getElementById('qStat');const hs=document.getElementById('hStat');
-  if(ts){ts.textContent=tot;ts.style.color=GC[gr.g];}
-  if(gs){gs.textContent=gr.g;gs.className='badge '+gr.cls;}
-  if(tb){tb.style.width=tot+'%';tb.style.background=GC[gr.g];}
-  if(qs)qs.textContent=calcSection(cid,CU.id,'quiz');
-  if(hs)hs.textContent=calcSection(cid,CU.id,'hw');
-  const cr=document.getElementById('calcResult');
-  if(cr)cr.innerHTML=buildCalcResult(cid,window._studTab||'all');
-}
+    function updateStudLive(cid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return;
+      const sc = c.schema;
+      if (!c.grades[CU.id]) c.grades[CU.id] = { quizzes: Array(qMaxes(sc).length).fill(null), hws: Array(hMaxes(sc).length).fill(null), mid: null, proj: null };
+      c.grades[CU.id].quizzes = Array.from({ length: qMaxes(sc).length }, (_, i) => { const v = document.getElementById(`sq_${i}`)?.value; return v === '' ? null : +v; });
+      c.grades[CU.id].hws = Array.from({ length: hMaxes(sc).length }, (_, i) => { const v = document.getElementById(`sh_${i}`)?.value; return v === '' ? null : +v; });
+      const tot = calcTotal(cid, CU.id); const gr = getGr(tot);
+      const ts = document.getElementById('totStat'); const gs = document.getElementById('grStat');
+      const tb = document.getElementById('totBar'); const qs = document.getElementById('qStat'); const hs = document.getElementById('hStat');
+      if (ts) { ts.textContent = tot; ts.style.color = GC[gr.g]; }
+      if (gs) { gs.textContent = gr.g; gs.className = 'badge ' + gr.cls; }
+      if (tb) { tb.style.width = tot + '%'; tb.style.background = GC[gr.g]; }
+      if (qs) qs.textContent = calcSection(cid, CU.id, 'quiz');
+      if (hs) hs.textContent = calcSection(cid, CU.id, 'hw');
+      const cr = document.getElementById('calcResult');
+      if (cr) cr.innerHTML = buildCalcResult(cid, window._studTab || 'all');
+    }
 
-function saveStudGrades(cid){
-  const c=DB.courses.find(c=>c.id===cid);if(!c)return;
-  const sc=c.schema;const qm=qMaxes(sc);const hm=hMaxes(sc);
-  if(!c.grades[CU.id])c.grades[CU.id]={quizzes:Array(qm.length).fill(null),hws:Array(hm.length).fill(null),mid:null,proj:null};
-  c.grades[CU.id].quizzes=qm.map((mx,i)=>{const v=document.getElementById(`sq_${i}`)?.value;return v===''?null:Math.min(+v,mx);});
-  c.grades[CU.id].hws=hm.map((mx,i)=>{const v=document.getElementById(`sh_${i}`)?.value;return v===''?null:Math.min(+v,mx);});
-  buildNotifs();
-  const btn=document.querySelector(`button[onclick="saveStudGrades('${cid}')"]`);
-  if(btn){btn.textContent='✅ تم الحفظ!';btn.style.background='linear-gradient(135deg,var(--gr),#1a7f37)';
-    setTimeout(()=>{btn.textContent='💾 حفظ ومتابعة';btn.style.background='';},2000);}
-}
+    function saveStudGrades(cid) {
+      const c = DB.courses.find(c => c.id === cid); if (!c) return;
+      const sc = c.schema; const qm = qMaxes(sc); const hm = hMaxes(sc);
+      if (!c.grades[CU.id]) c.grades[CU.id] = { quizzes: Array(qm.length).fill(null), hws: Array(hm.length).fill(null), mid: null, proj: null };
+      c.grades[CU.id].quizzes = qm.map((mx, i) => { const v = document.getElementById(`sq_${i}`)?.value; return v === '' ? null : Math.min(+v, mx); });
+      c.grades[CU.id].hws = hm.map((mx, i) => { const v = document.getElementById(`sh_${i}`)?.value; return v === '' ? null : Math.min(+v, mx); });
+      buildNotifs();
+      const btn = document.querySelector(`button[onclick="saveStudGrades('${cid}')"]`);
+      if (btn) { btn.textContent = '✅ تم الحفظ!'; btn.style.background = 'linear-gradient(135deg,var(--gr),#1a7f37)'; setTimeout(() => { btn.textContent = '💾 حفظ ومتابعة'; btn.style.background = ''; }, 2000); }
+    }
 
-// ═══ PROFILE ═══
-function buildProfile(){
-  const isDoc=CU.role==='doctor';const courses=myCourses();
-  return`
+    // ═══ PROFILE ═══
+    function buildProfile() {
+      const isDoc = CU.role === 'doctor'; const courses = myCourses();
+      return `
   <div class="phero">
     <div class="flex ai-c gap12">
       <div class="avup" onclick="document.getElementById('avIn').click()">
-        <img id="profAv" src="${CU.avatar||''}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22><circle cx=%2240%22 cy=%2240%22 r=%2240%22 fill=%22%2358a6ff%22/><text x=%2240%22 y=%2252%22 text-anchor=%22middle%22 fill=%22%230d1117%22 font-size=%2232%22 font-weight=%22bold%22>👤</text></svg>'">
+        <img id="profAv" src="${CU.avatar || ''}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22><circle cx=%2240%22 cy=%2240%22 r=%2240%22 fill=%22%2358a6ff%22/><text x=%2240%22 y=%2252%22 text-anchor=%22middle%22 fill=%22%230d1117%22 font-size=%2232%22 font-weight=%22bold%22>👤</text></svg>'">
         <div class="ov">📷</div>
       </div>
       <input type="file" id="avIn" accept="image/*" class="hidden" onchange="uploadAv(this)">
       <div>
         <div style="font-size:20px;font-weight:900;font-family:Cairo,sans-serif;color:var(--tx)">${CU.name}</div>
-        <div style="font-size:12px;color:var(--mu);margin-top:2px">${isDoc?'👨‍🏫 دكتور':'👨‍🎓 طالب'} • ${CU.id}</div>
-        ${CU.bio?`<div style="font-size:11px;color:var(--mu);margin-top:4px">${CU.bio}</div>`:''}
+        <div style="font-size:12px;color:var(--mu);margin-top:2px">${isDoc ? '👨‍🏫 دكتور' : '👨‍🎓 طالب'} • ${CU.id}</div>
+        ${CU.bio ? `<div style="font-size:11px;color:var(--mu);margin-top:4px">${CU.bio}</div>` : ''}
       </div>
     </div>
   </div>
@@ -1544,74 +2120,311 @@ function buildProfile(){
     <div class="card">
       <div class="ch">✏️ تعديل المعلومات</div>
       <div class="ef"><label>الاسم الكامل</label><input id="pN" value="${CU.name}"></div>
-      ${isDoc?`<div class="ef"><label>القسم</label><input id="pD" value="${CU.dept||''}"></div>`:
-              `<div class="ef"><label>التخصص</label><input id="pM" value="${CU.major||''}"></div>`}
-      <div class="ef"><label>نبذة شخصية</label><input id="pB" value="${CU.bio||''}" placeholder="اكتب نبذة..."></div>
+      ${isDoc
+          ? `<div class="ef"><label>القسم</label><input id="pD" value="${CU.dept || ''}"></div>`
+          : `<div class="ef"><label>التخصص</label><input id="pM" value="${CU.major || ''}"></div>`}
+      <div class="ef"><label>نبذة شخصية</label><input id="pB" value="${CU.bio || ''}" placeholder="اكتب نبذة..."></div>
       <div class="ef"><label>كلمة المرور الجديدة</label><input type="password" id="pP" placeholder="اتركها فارغة للإبقاء"></div>
       <button class="btn btn-p" onclick="saveProfile()" style="width:100%;margin-top:4px">💾 حفظ</button>
     </div>
     <div class="card">
-      <div class="ch">${isDoc?'📚 مقرراتي':'📊 أدائي'}</div>
-      ${courses.map(c=>{
-        const tot=isDoc?null:calcTotal(c.id,CU.id);const gr=tot!=null?getGr(tot):null;
-        const studs=courseStudents(c.id);
-        return`<div style="padding:10px;background:var(--sf);border-radius:9px;margin-bottom:8px;border:1px solid var(--bd)">
+      <div class="ch">${isDoc ? '📚 مقرراتي' : '📊 أدائي'}</div>
+      ${courses.map(c => {
+          const tot = isDoc ? null : calcTotal(c.id, CU.id); const gr = tot != null ? getGr(tot) : null;
+          const studs = courseStudents(c.id);
+          return `<div style="padding:10px;background:var(--sf);border-radius:9px;margin-bottom:8px;border:1px solid var(--bd)">
           <div class="flex ai-c jb">
             <div>
               <div style="font-weight:600;font-size:13px">${c.name}</div>
-              <div style="font-size:11px;color:var(--mu)">${c.id}${isDoc?` • ${studs.length} طالب`:''}</div>
+              <div style="font-size:11px;color:var(--mu)">${c.id}${isDoc ? ` • ${studs.length} طالب` : ''}</div>
             </div>
-            ${!isDoc&&gr?`<span class="badge ${gr.cls}" style="font-size:12px;padding:4px 10px">${gr.g} (${tot})</span>`:''}
+            ${!isDoc && gr ? `<span class="badge ${gr.cls}" style="font-size:12px;padding:4px 10px">${gr.g} (${tot})</span>` : ''}
           </div>
-          ${!isDoc&&tot!=null?`<div class="pw mt12" style="height:5px"><div class="pb" style="width:${tot}%;background:${GC[gr.g]}"></div></div>`:''}
+          ${!isDoc && tot != null ? `<div class="pw mt12" style="height:5px"><div class="pb" style="width:${tot}%;background:${GC[gr.g]}"></div></div>` : ''}
         </div>`;
-      }).join('')||'<p style="color:var(--mu);font-size:12px">لا توجد</p>'}
+        }).join('') || '<p style="color:var(--mu);font-size:12px">لا توجد</p>'}
     </div>
   </div>`;
-}
-function uploadAv(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{CU.avatar=e.target.result;document.getElementById('profAv').src=e.target.result;document.getElementById('HAV').src=e.target.result;};r.readAsDataURL(f);}
-function saveProfile(){
-  CU.name=document.getElementById('pN')?.value||CU.name;
-  CU.bio=document.getElementById('pB')?.value||'';
-  if(CU.role==='student')CU.major=document.getElementById('pM')?.value||CU.major;
-  else CU.dept=document.getElementById('pD')?.value||CU.dept;
-  const p=document.getElementById('pP')?.value;if(p)CU.pwd=p;
-  const btn=document.querySelector(`button[onclick="saveProfile()"]`);
-  if(btn){btn.textContent='✅ تم!';setTimeout(()=>{btn.textContent='💾 حفظ';goTab('profile');},1500);}
-  else goTab('profile');
-}
+    }
 
-// ═══ NOTIFICATIONS ═══
-function buildNotifs(){
-  if(!CU)return;
-  const alerts=CU.role==='doctor'?getSmartAlerts().filter(a=>a.type==='fail'||a.type==='warn'):[];
-  document.getElementById('NB').textContent=alerts.length;
-  document.getElementById('NL').innerHTML=!alerts.length?
-    `<div style="padding:14px;text-align:center;color:var(--mu);font-size:12px">✅ لا توجد تنبيهات</div>`:
-    alerts.map(a=>`<div class="ni"><div class="nd ${a.type==='fail'?'nd-r':'nd-o'}"></div>
-      <div class="nt"><b>${a.name}</b><br>${a.type==='fail'?'خطر الرسوب':'تحذير مبكر'}<div style="font-size:10px;color:var(--mu)">${a.detail}</div></div></div>`).join('');
-}
-function toggleNotif(){document.getElementById('NP').classList.toggle('open');}
-document.addEventListener('click',e=>{const w=document.getElementById('NW');if(w&&!w.contains(e.target))document.getElementById('NP').classList.remove('open');});
+    function uploadAv(inp) {
+      const f = inp.files[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = e => { CU.avatar = e.target.result; document.getElementById('profAv').src = e.target.result; document.getElementById('HAV').src = e.target.result; };
+      r.readAsDataURL(f);
+    }
+    function saveProfile() {
+      CU.name = document.getElementById('pN')?.value || CU.name;
+      CU.bio = document.getElementById('pB')?.value || '';
+      if (CU.role === 'student') CU.major = document.getElementById('pM')?.value || CU.major;
+      else CU.dept = document.getElementById('pD')?.value || CU.dept;
+      const p = document.getElementById('pP')?.value; if (p) CU.pwd = p;
+      const btn = document.querySelector(`button[onclick="saveProfile()"]`);
+      if (btn) { btn.textContent = '✅ تم!'; setTimeout(() => { btn.textContent = '💾 حفظ'; goTab('profile'); }, 1500); }
+      else goTab('profile');
+    }
 
+    // ═══ RECOMMENDATIONS ENGINE ═══
+    function getStudentRecommendations(cid, sid) {
+      const c  = DB.courses.find(c => c.id === cid); if (!c) return [];
+      const g  = getG(cid, sid);
+      const sc = c.schema;
+      const qm = qMaxes(sc); const hm = hMaxes(sc);
+      const tot  = calcTotal(cid, sid);
+      const gr   = getGr(tot);
+      const maxP = calcMaxPossible(cid, sid);
+      const qSec = calcSection(cid, sid, 'quiz');
+      const hSec = calcSection(cid, sid, 'hw');
+      const mSec = calcSection(cid, sid, 'mid');
+      const pSec = calcSection(cid, sid, 'proj');
 
-// ═══ LANGUAGE ═══
-function setLang(l,btn){
-  lang=l;
-  document.documentElement.setAttribute('lang',l);
-  document.documentElement.setAttribute('dir',l==='ar'?'rtl':'ltr');
-  document.querySelectorAll('.lang-row .lbtn').forEach(b=>b.classList.remove('on'));
-  if(btn)btn.classList.add('on');
-}
-function toggleLang(){
-  lang=lang==='ar'?'en':'ar';
-  document.documentElement.setAttribute('lang',lang);
-  document.documentElement.setAttribute('dir',lang==='ar'?'rtl':'ltr');
-  document.getElementById('langBtn').textContent=lang==='ar'?'EN':'ع';
-}
+      // Percentages per section (how much of the weight they earned)
+      const qPct = sc.quizWeight  > 0 ? qSec / sc.quizWeight  : 1;
+      const hPct = sc.hwWeight    > 0 ? hSec / sc.hwWeight    : 1;
+      const mPct = sc.midWeight   > 0 ? mSec / sc.midWeight   : 1;
+      const pPct = sc.projWeight  > 0 ? pSec / sc.projWeight  : 1;
 
-// ═══ INIT ═══
-pickRole('doctor');
-</script>
+      // Identify weakest CE quiz
+      const ceScores = g.quizzes.map((v, i) => v != null ? v / (qm[i] || 5) : null).filter(v => v != null);
+      const weakCE   = ceScores.length ? Math.min(...ceScores) : null;
+      const weakCEIdx= g.quizzes.findIndex((v, i) => v != null && v / (qm[i] || 5) === weakCE);
+
+      // Absent quizzes
+      const absentCE = g.quizzes.map((v, i) => v == null ? `CE${i + 1}` : null).filter(Boolean);
+
+      const recs = [];
+
+      // ── F grade ──────────────────────────────────────────────────────────
+      if (gr.g === 'F') {
+        recs.push({ icon: '🚨', type: 'danger', title: 'وضعك حرج — تصرف الآن',
+          body: `مجموعك الحالي ${tot}/100 وهو في نطاق الرسوب. حتى لو حصلت على أقصى درجة في كل ما تبقى، مجموعك لن يتجاوز ${maxP}. تواصل مع الدكتور في أقرب وقت.` });
+        if (absentCE.length)
+          recs.push({ icon: '📋', type: 'danger', title: 'غياب في اختبارات',
+            body: `لديك غياب في: ${absentCE.join('، ')}. الغياب يعني صفر في هذه الدرجات ويؤثر بشكل كبير على مجموعك. راجع سياسة المادة مع الدكتور.` });
+        recs.push({ icon: '📚', type: 'warn', title: 'خطة طوارئ للدراسة',
+          body: 'خصص 2 ساعة يومياً على الأقل للمراجعة. ابدأ بالمواضيع الأساسية التي ظهرت في الاختبارات السابقة ولم تتقنها.' });
+        recs.push({ icon: '🤝', type: 'info', title: 'اطلب المساعدة',
+          body: 'لا تتردد في سؤال الدكتور أو زملائك المتفوقين. الساعات المكتبية للدكتور فرصة لا تفوّتها.' });
+      }
+
+      // ── D grade ──────────────────────────────────────────────────────────
+      else if (gr.g === 'D') {
+        recs.push({ icon: '⚠️', type: 'warn', title: 'أنت قريب من حد النجاح',
+          body: `مجموعك ${tot}/100. تحتاج ${60 - tot} نقطة إضافية للوصول إلى C. أقصى ممكن لك: ${maxP}. لا يزال بإمكانك تحسين وضعك.` });
+        if (qPct < hPct && qPct < 0.65)
+          recs.push({ icon: '📝', type: 'warn', title: 'ركّز على اختبارات CE',
+            body: `أداؤك في CE Quizzes أضعف نقاطك (${Math.round(qPct * 100)}% من الوزن المحتمل). راجع ملاحظات المحاضرات وحل أسئلة الدورات السابقة.` });
+        if (hPct < 0.6)
+          recs.push({ icon: '📓', type: 'warn', title: 'الواجبات تحتاج اهتماماً',
+            body: `الواجبات تمثل ${sc.hwWeight}% من مجموعك. سلّم جميع الواجبات حتى لو لم تكن مثالية — الدرجة الجزئية أفضل من الصفر.` });
+        recs.push({ icon: '🗓️', type: 'info', title: 'ضع جدولاً أسبوعياً',
+          body: 'قسّم وقتك: ساعة للمراجعة اليومية، وركّز على المواضيع الضعيفة قبل الاختبار النصفي.' });
+      }
+
+      // ── C grade ──────────────────────────────────────────────────────────
+      else if (gr.g === 'C') {
+        recs.push({ icon: '👍', type: 'info', title: 'أداء مقبول — يمكنك التحسين',
+          body: `مجموعك ${tot}/100. أنت في نطاق C وتحتاج ${80 - tot} نقطة للوصول إلى B. أقصى ممكن: ${maxP}.` });
+        const lowest = [['CE Quizzes', qPct], ['HW', hPct], ['Midterm', mPct], ['Project', pPct]]
+          .filter(([, p]) => p < 1).sort((a, b) => a[1] - b[1])[0];
+        if (lowest)
+          recs.push({ icon: '🔍', type: 'info', title: `أضعف نقطة: ${lowest[0]}`,
+            body: `حصلت على ${Math.round(lowest[1] * 100)}% من وزن ${lowest[0]}. تحسين هذا الجانب سيرفع مجموعك بشكل ملحوظ.` });
+        recs.push({ icon: '🔄', type: 'success', title: 'الاتساق هو المفتاح',
+          body: 'حافظ على تسليم الواجبات في وقتها واستعد جيداً لكل اختبار. الثبات في الأداء يصنع الفارق على المدى البعيد.' });
+        if (maxP >= 80)
+          recs.push({ icon: '🎯', type: 'success', title: 'B في متناولك',
+            body: `إذا حصلت على درجات ممتازة في ما تبقى، يمكنك الوصول إلى B (أقصى ممكن: ${maxP}). ركّز على المشروع والاختبار النصفي.` });
+      }
+
+      // ── B grade ──────────────────────────────────────────────────────────
+      else if (gr.g === 'B') {
+        recs.push({ icon: '🌟', type: 'success', title: 'أداء جيد — استمر',
+          body: `مجموعك ${tot}/100. أنت في نطاق B وتحتاج ${90 - tot} نقطة للوصول إلى A. أقصى ممكن: ${maxP}.` });
+        if (weakCE !== null && weakCE < 0.8 && weakCEIdx >= 0)
+          recs.push({ icon: '📝', type: 'info', title: `راجع CE${weakCEIdx + 1}`,
+            body: `هذا الاختبار كان أضعف نقاطك (${Math.round(weakCE * 100)}%). راجع المفاهيم التي ظهرت فيه لتتجنب ضعفاً مشابهاً في المستقبل.` });
+        if (pPct < 0.85 && g.proj != null)
+          recs.push({ icon: '🗂️', type: 'info', title: 'طوّر مستوى مشروعك',
+            body: 'المشروع يمثل وزناً كبيراً. راجع تعليقات الدكتور وحسّن جودة عملك للحصول على درجة أعلى.' });
+        if (maxP >= 90)
+          recs.push({ icon: '🚀', type: 'success', title: 'A في متناولك',
+            body: `بأقصى استغلال للفرص المتبقية يمكنك الوصول إلى ${maxP}. ركّز بشكل خاص على المشروع النهائي.` });
+        else
+          recs.push({ icon: '💪', type: 'info', title: 'حافظ على مستواك',
+            body: 'A قد يكون صعب المنال هذا الفصل، لكن B ممتازة. ركّز على تثبيت مجموعك وعدم التراجع.' });
+      }
+
+      // ── A grade ──────────────────────────────────────────────────────────
+      else if (gr.g === 'A') {
+        recs.push({ icon: '🏆', type: 'success', title: 'أداء ممتاز — أنت قريب من القمة',
+          body: `مجموعك ${tot}/100. تحتاج فقط ${95 - tot} نقطة إضافية للوصول إلى A+. أقصى ممكن: ${maxP}.` });
+        if (maxP >= 95)
+          recs.push({ icon: '⭐', type: 'success', title: 'A+ في متناولك',
+            body: `إذا أتقنت ما تبقى يمكنك الوصول إلى A+ (أقصى: ${maxP}). لا تتراخَ في المشروع والاختبار النصفي.` });
+        else
+          recs.push({ icon: '✅', type: 'info', title: 'A+ صعبة لكن A رائعة',
+            body: `أقصى ما يمكنك تحقيقه هو ${maxP}. ثبّت مجموعك ولا تخاطر. A تفتح لك أبواباً رائعة.` });
+        if (weakCE !== null && weakCE < 0.9)
+          recs.push({ icon: '🔬', type: 'info', title: 'صقّل نقاط الضعف الصغيرة',
+            body: `CE${weakCEIdx + 1} كان أقل اختباراتك (${Math.round(weakCE * 100)}%). راجع موضوعه لتكون مستعداً لأي سؤال مشابه في النهائي.` });
+        recs.push({ icon: '🎓', type: 'success', title: 'شارك خبرتك',
+          body: 'مستواك يؤهلك لمساعدة زملائك. تعليم الآخرين يعمّق فهمك أنت أيضاً — فكّر في تكوين مجموعة مذاكرة.' });
+      }
+
+      // ── A+ grade ─────────────────────────────────────────────────────────
+      else if (gr.g === 'A+') {
+        recs.push({ icon: '👑', type: 'success', title: 'أنت في القمة — A+',
+          body: `مجموعك ${tot}/100. أداء استثنائي يضعك في أعلى الفصل. حافظ على هذا المستوى حتى نهاية الفصل.` });
+        recs.push({ icon: '🔝', type: 'success', title: 'استمر وثبّت مكانتك',
+          body: 'لا تتراخَ في الاختبارات القادمة أو المشروع. كثير من الطلاب يبدؤون بقوة ثم يتراجعون — أنت استثناء.' });
+        recs.push({ icon: '🤝', type: 'info', title: 'ساعد زملاءك',
+          body: 'مستواك المتميز يجعلك مرجعاً لزملائك. المذاكرة الجماعية وشرح المفاهيم يزيدك تمكيناً.' });
+        recs.push({ icon: '🌍', type: 'info', title: 'فكّر في الأفق الأبعد',
+          body: 'أداؤك يؤهلك للمشاركة في المسابقات الأكاديمية أو البحث العلمي مع الدكتور. استغل هذه الفرصة.' });
+        recs.push({ icon: '📈', type: 'success', title: 'المحافظة أصعب من الوصول',
+          body: 'الحفاظ على A+ حتى النهاية يتطلب انضباطاً مستمراً. لا تفوّت أي واجب أو اختبار.' });
+      }
+
+      return recs;
+    }
+
+    function buildRecsPage() {
+      const courses = myCourses();
+      if (!courses.length) return `<div class="card" style="text-align:center;padding:40px;color:var(--mu)">لا توجد مقررات</div>`;
+
+      const typeStyle = {
+        danger:  { bg: 'var(--rl)', border: 'var(--re)',  text: 'var(--re)'  },
+        warn:    { bg: 'var(--ol)', border: 'var(--or)',  text: 'var(--or)'  },
+        info:    { bg: 'var(--pl)', border: 'var(--pri)', text: 'var(--pri)' },
+        success: { bg: 'var(--gl)', border: 'var(--gr)',  text: 'var(--gr)'  },
+      };
+
+      return courses.map(c => {
+        const tot  = calcTotal(c.id, CU.id);
+        const gr   = getGr(tot);
+        const recs = getStudentRecommendations(c.id, CU.id);
+        const maxP = calcMaxPossible(c.id, CU.id);
+
+        return `
+      <div class="card" style="margin-bottom:18px">
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
+          padding:14px 16px;border-radius:10px;
+          background:linear-gradient(135deg,${gr.g==='A+'||gr.g==='A' ? '#0e2016,#0e1c36' : gr.g==='B' ? '#0e1c36,#141030' : '#1c1010,#0e1c36'});
+          border:1px solid var(--bd)">
+          <div>
+            <div style="font-size:16px;font-weight:900;font-family:Cairo,sans-serif;color:var(--tx)">${c.name}</div>
+            <div style="font-size:11px;color:var(--mu);margin-top:2px">توصيات شخصية بناءً على أدائك الفعلي</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:32px;font-weight:900;font-family:Cairo,sans-serif;color:${GC[gr.g]}">${tot}</div>
+            <span class="badge ${gr.cls}" style="font-size:12px;padding:4px 12px">${gr.g}</span>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px">
+            <span style="color:var(--mu)">المجموع الحالي</span>
+            <span style="color:var(--mu)">أقصى ممكن: <b style="color:${GC[gr.g]}">${maxP}</b></span>
+          </div>
+          <div style="background:var(--bd);border-radius:20px;height:8px;overflow:hidden;position:relative">
+            <div style="position:absolute;width:${maxP}%;height:100%;background:${GC[gr.g]}22;border-radius:20px"></div>
+            <div style="position:absolute;width:${tot}%;height:100%;background:${GC[gr.g]};border-radius:20px;transition:width .6s"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--mu2)">
+            ${[60,70,80,90,95].map(t => `<span style="color:${tot>=t?'var(--gr)':'var(--mu2)'}">${t}</span>`).join('')}
+          </div>
+        </div>
+
+        <!-- Recommendation cards -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          ${recs.map(r => {
+            const st = typeStyle[r.type] || typeStyle.info;
+            return `<div style="background:${st.bg};border:1.5px solid ${st.border};border-radius:10px;padding:14px">
+              <div style="font-size:20px;margin-bottom:6px">${r.icon}</div>
+              <div style="font-size:12px;font-weight:700;color:${st.text};margin-bottom:6px">${r.title}</div>
+              <div style="font-size:11px;color:var(--tx);line-height:1.6">${r.body}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+      }).join('');
+    }
+    function buildNotifs() {
+      if (!CU) return;
+
+      let alerts = [];
+
+      if (CU.role === 'doctor') {
+        alerts = getSmartAlerts().filter(a => a.type === 'fail' || a.type === 'warn');
+
+      } else {
+        // ── Student notifications ──────────────────────────────────────────
+        myCourses().forEach(c => {
+          const tot   = calcTotal(c.id, CU.id);
+          const gr    = getGr(tot);
+          const w     = getWarnings(c.id, CU.id);
+          const maxP  = calcMaxPossible(c.id, CU.id);
+
+          if (gr.g === 'F') {
+            alerts.push({
+              dot: 'nd-r',
+              title: `🚨 خطر الرسوب — ${c.name}`,
+              body:  `مجموعك الحالي ${tot}/100. أقصى ممكن: ${maxP}. تواصل مع الدكتور فوراً!`
+            });
+          } else if (gr.g === 'D') {
+            alerts.push({
+              dot: 'nd-o',
+              title: `⚠️ مستوى منخفض — ${c.name}`,
+              body:  `مجموعك ${tot}/100. راجع درجاتك وحسّن أداءك.`
+            });
+          }
+
+          if (w.length) {
+            alerts.push({
+              dot: 'nd-o',
+              title: `📉 تحذير مبكر — ${c.name}`,
+              body:  w.join(' | ')
+            });
+          }
+
+          // Warn if A+ is no longer reachable
+          if (maxP < 95 && gr.g !== 'A+') {
+            alerts.push({
+              dot: 'nd-o',
+              title: `ℹ️ A+ غير متاح — ${c.name}`,
+              body:  `أقصى مجموع ممكن هو ${maxP}، لا يكفي للحصول على A+.`
+            });
+          }
+        });
+      }
+
+      document.getElementById('NB').textContent = alerts.length;
+      document.getElementById('NL').innerHTML = !alerts.length
+        ? `<div style="padding:14px;text-align:center;color:var(--mu);font-size:12px">✅ لا توجد تنبيهات</div>`
+        : CU.role === 'doctor'
+          ? alerts.map(a => `<div class="ni">
+              <div class="nd ${a.type === 'fail' ? 'nd-r' : 'nd-o'}"></div>
+              <div class="nt"><b>${a.name}</b><br>${a.type === 'fail' ? 'خطر الرسوب' : 'تحذير مبكر'}
+                <div style="font-size:10px;color:var(--mu)">${a.detail}</div>
+              </div></div>`).join('')
+          : alerts.map(a => `<div class="ni">
+              <div class="nd ${a.dot}"></div>
+              <div class="nt"><b>${a.title}</b>
+                <div style="font-size:10px;color:var(--mu);margin-top:2px">${a.body}</div>
+              </div></div>`).join('');
+    }
+    function toggleNotif() { document.getElementById('NP').classList.toggle('open'); }
+    document.addEventListener('click', e => {
+      const w = document.getElementById('NW');
+      if (w && !w.contains(e.target)) document.getElementById('NP').classList.remove('open');
+    });
+
+    // ═══ INIT ═══
+    pickRole('doctor');
+  </script>
 </body>
+
 </html>
